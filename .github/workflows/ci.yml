@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Build only. The roadmap's Lean targets carry `sorry` on purpose (they are goals),
+      # so there is no axiom audit or warning-as-error here.
+      - name: Build
+        uses: leanprover/lean-action@v1
+        with:
+          test: false
+          lint: false
+          use-mathlib-cache: true
+          use-github-cache: false

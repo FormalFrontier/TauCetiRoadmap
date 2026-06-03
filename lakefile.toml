@@ -1,0 +1,14 @@
+name = "TauCetiRoadmap"
+defaultTargets = ["TauCetiRoadmap"]
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "master"
+
+# Human-owned roadmaps: markdown plus Lean target signatures. `sorry` is allowed here
+# (these are goals, not proofs), so this library builds without `warningAsError`. Glob all
+# submodules so every roadmap file is built (and an orphan or broken target is caught).
+[[lean_lib]]
+name = "TauCetiRoadmap"
+globs = ["TauCetiRoadmap.*"]
