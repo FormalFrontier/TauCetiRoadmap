@@ -1,2 +1,11 @@
-# The roadmap is human-governed.
-*                 @FormalFrontier/humans
+# Roadmap content is reviewed by the roadmap-reviewers team: an approving review from a member
+# (plus the `build` check) makes a PR mergeable, and merges it automatically once auto-merge is
+# enabled. Infrastructure stays with the humans team. Last-match-wins.
+
+*                     @FormalFrontier/roadmap-reviewers
+
+# Infrastructure stays human-governed (the more trusted core team):
+/.github/             @FormalFrontier/humans
+/lakefile.toml        @FormalFrontier/humans
+/lake-manifest.json   @FormalFrontier/humans
+/lean-toolchain       @FormalFrontier/humans
