@@ -14,6 +14,17 @@ in the code repo; review machinery lives in
 3. [Reductive algebraic groups](TauCetiRoadmap/ReductiveGroups/README.md)
 4. [Partial differential equations](TauCetiRoadmap/PDE/README.md)
 
+## How changes are made
+
+Anyone can open a pull request against a roadmap. It merges automatically once it has an
+approving review from a member of the `@FormalFrontier/roadmap-reviewers` team (the code owners
+for roadmap content) and the `build` check passes. Infrastructure files — the workflows, the
+Lake config, the toolchain pin — stay with the core `@FormalFrontier/humans` team.
+
+The reviewer pool grows itself: a contributor who lands three merged roadmap PRs is added to
+`roadmap-reviewers` automatically, so people who have demonstrably moved a roadmap forward can
+start approving others' roadmap work.
+
 ## Building
 
 ```bash
