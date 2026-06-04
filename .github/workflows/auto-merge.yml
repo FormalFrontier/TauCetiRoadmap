@@ -1,0 +1,34 @@
+name: auto-merge
+
+# Queue every non-draft PR for GitHub-native auto-merge, using a tauceti-review-bot App token
+# (the org disables write GITHUB_TOKEN). Branch protection requires a roadmap-reviewers code-owner
+# approval plus the `build` check, so GitHub merges the PR automatically once a team member
+# approves and CI passes. Native auto-merge watches PR state directly, so this is unaffected by
+# the pull_request_review event-delivery issue.
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  enable:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mint App token (pull-requests + contents write)
+        id: token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: FormalFrontier
+          repositories: TauCetiRoadmap
+          permission-pull-requests: write
+          permission-contents: write
+      - name: Enable auto-merge
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+        run: gh pr merge "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --auto --squash
