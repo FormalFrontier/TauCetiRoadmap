@@ -6,3 +6,4 @@ import TauCetiRoadmap.UniversalCovers.Targets
 import TauCetiRoadmap.JacobianChallenge.Targets
 import TauCetiRoadmap.ReductiveGroups.Targets
 import TauCetiRoadmap.PDE.Targets
+import TauCetiRoadmap.HeegaardFloer.Targets
