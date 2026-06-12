@@ -14,6 +14,7 @@ in the code repo; review machinery lives in
 3. [Reductive algebraic groups](TauCetiRoadmap/ReductiveGroups/README.md)
 4. [Partial differential equations](TauCetiRoadmap/PDE/README.md)
 5. [Heegaard Floer and knot Floer homology](TauCetiRoadmap/HeegaardFloer/README.md)
+6. [Multiquadratic fields and genus theory](TauCetiRoadmap/Multiquadratic/README.md)
 
 ## How changes are made
 
