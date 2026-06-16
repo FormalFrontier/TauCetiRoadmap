@@ -19,6 +19,7 @@ industry groups.
 4. [Partial differential equations](TauCetiRoadmap/PDE/README.md)
 5. [Heegaard Floer and knot Floer homology](TauCetiRoadmap/HeegaardFloer/README.md)
 6. [Multiquadratic fields and genus theory](TauCetiRoadmap/Multiquadratic/README.md)
+7. [Effective arithmetic bounds and geometry of numbers](TauCetiRoadmap/EffectiveBounds/README.md)
 
 ## How changes are made
 
@@ -27,7 +28,7 @@ approving review from a member of the `@FormalFrontier/roadmap-reviewers` team (
 for roadmap content) and the `build` check passes. Infrastructure files (the workflows, the
 Lake config, the toolchain pin) stay with the core `@FormalFrontier/humans` team.
 
-The reviewer pool grows itself: a contributor who lands three merged roadmap PRs is added to
+The reviewer pool grows itself: a contributor who lands two merged roadmap PRs is added to
 `roadmap-reviewers` automatically, so people who have demonstrably moved a roadmap forward can
 start approving others' roadmap work.
 
