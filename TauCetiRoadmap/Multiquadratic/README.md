@@ -49,7 +49,7 @@ rational and prime-indexed versions (the genus-theory inputs) as corollaries.
 
 ## What Mathlib already has (consume)
 
-- **Adjoining roots / Kummer theory:** `Mathlib/FieldTheory/Adjoin.lean`
+- **Adjoining roots / Kummer theory:** `Mathlib/FieldTheory/IntermediateField/Adjoin/*`
   (`IntermediateField.adjoin`, `adjoin_simple`, `finrank` of `adjoin` of one element),
   `Mathlib/FieldTheory/KummerExtension.lean` (degree of `K(ⁿ√a)`), and the quadratic
   special cases under `Mathlib/Algebra/QuadraticDiscriminant.lean`.

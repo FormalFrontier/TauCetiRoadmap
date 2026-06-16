@@ -39,7 +39,7 @@ target isomorphisms below are only correct up to `ᵐᵒᵖ` depending on it.
   covering `FundamentalGroupoid`, `FundamentalGroup`, homotopy-invariance/functoriality
   (`InducedMaps.lean`: `homotopicMapsNatIso`, `equivOfHomotopyEquiv`), `SimplyConnected`.
 - **Homotopy groups:** `Mathlib/Topology/Homotopy/HomotopyGroup.lean` (`Ω^N`,
-  `HomotopyGroup`) and `Mathlib/Topology/Covering/HomotopyGroup.lean`.
+  `HomotopyGroup`).
 - **Galois-category abstraction:** `Mathlib/CategoryTheory/Galois/IsFundamentalgroup.lean`
   (`IsFundamentalGroup`, `toAutMulEquiv : G ≃* Aut F`), an alternative lens on the
   classification, via fibre functors.

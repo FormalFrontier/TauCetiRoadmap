@@ -167,7 +167,7 @@ Robbin–Salamon spectral flow; Atiyah–Singer never appears.
   **manifolds over arbitrary Banach model spaces by design** (`ModelWithCorners`,
   tangent bundles, smooth vector bundles, manifolds with boundary/corners), with
   integral curves and flows on Banach manifolds; compact operators and the
-  **Fredholm alternative** (`Compact/FredholmAlternative.lean`); Arzelà–Ascoli;
+  **Fredholm alternative** (`Operator/FredholmAlternative.lean`); Arzelà–Ascoli;
   Banach–Alaoglu; Lax–Milgram; strong one-variable complex analysis (Cauchy
   integral, removable singularity, identity theorem, Schwarz lemma); Hofer's lemma
   (`Mathlib/Analysis/Hofer.lean`, whose docstring already names bubbling-off
