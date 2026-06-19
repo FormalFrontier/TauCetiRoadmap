@@ -13,7 +13,8 @@ homology, and `HF̂` via holomorphic disks in `Sym^g(Σ)`. The theories that are
 combinatorial all the way down (grid homology, lattice homology, the
 Ozsváth–Stipsicz–Szabó stable `HF̂`) are its companion
 [Combinatorial Heegaard Floer roadmap](../CombinatorialHeegaardFloer/README.md);
-the two meet at precisely-stated reconciliation theorems named in both.
+the two meet at precisely-stated reconciliation theorems, which this roadmap owns
+(they depend on the analytic tower, the long pole).
 
 This is **not a linear roadmap**. It is a family of lanes with several independent
 on-ramps; nearly every lane is publishable mathematics on its own, and each would be
@@ -47,15 +48,12 @@ substrate yields quickly to blueprint-driven effort.
 
 - **v3 (the long game, analytic).** Morse homology; Lagrangian Floer homology of
   exact Lagrangians; `HF̂(Y)` over 𝔽₂ via holomorphic disks in `Sym^g(Σ)`.
-- **Reconciliations (shared with the combinatorial roadmap).** `HF̂_st` = stabilized
-  holomorphic `HF̂` (the appendix of
-  [arXiv:0912.0830](https://arxiv.org/abs/0912.0830)); lattice homology = `HF⁻` of
-  plumbed manifolds (Zemke [arXiv:2111.14962](https://arxiv.org/abs/2111.14962));
-  grid homology = knot Floer homology
-  ([arXiv:math/0607691](https://arxiv.org/abs/math/0607691), via the cylindrical
-  reformulation of Lane F5). Each is a precise "the two definitions agree" theorem
-  where the analytic tower here meets a combinatorial lane there; they are stated in
-  both roadmaps.
+- **Reconciliations (this roadmap owns them).** The three "the two definitions
+  agree" theorems that join each combinatorial invariant to its holomorphic
+  counterpart. They depend on the analytic tower, which is the long pole, so they
+  live here rather than being split across both roadmaps; see the
+  [Reconciliations](#reconciliations-the-seams-and-the-long-pole) section below for
+  the precise statements.
 
 ```lean
 -- the shape we are building toward (state in Targets.lean as the types land):
@@ -104,7 +102,7 @@ substrate yields quickly to blueprint-driven effort.
   **manifolds over arbitrary Banach model spaces by design** (`ModelWithCorners`,
   tangent bundles, smooth vector bundles, manifolds with boundary/corners), with
   integral curves and flows on Banach manifolds; compact operators and the
-  **Fredholm alternative** (`Operator/FredholmAlternative.lean`); Arzelà–Ascoli;
+  **Fredholm alternative** (`Operator/Compact/FredholmAlternative.lean`); Arzelà–Ascoli;
   Banach–Alaoglu; Lax–Milgram; strong one-variable complex analysis (Cauchy
   integral, removable singularity, identity theorem, Schwarz lemma); Hofer's lemma
   (`Mathlib/Analysis/Hofer.lean`, whose docstring already names bubbling-off
@@ -251,10 +249,39 @@ Lipshitz's cylindrical reformulation
 SFT/Bourgeois–Eliashberg–Hofer–Wysocki–Zehnder compactness
 ([arXiv:math/0308183](https://arxiv.org/abs/math/0308183)), and, through it,
 bordered Floer homology ([arXiv:0810.0687](https://arxiv.org/abs/0810.0687)).
-Knot Floer homology via doubly-pointed diagrams and the reconciliation **grid
-homology = HFK** ([arXiv:math/0607691](https://arxiv.org/abs/math/0607691)) also
-live here, joining this roadmap to the combinatorial one's Lane G. ⚠ Polyfolds and
+Knot Floer homology via doubly-pointed diagrams lives here too; it is what the
+**grid homology = HFK** reconciliation (below) is stated against. ⚠ Polyfolds and
 virtual techniques stay off this roadmap: nothing here needs them.
+
+## Reconciliations (the seams, and the long pole)
+
+These are the "the two definitions agree" theorems that join each combinatorial
+invariant (built in the
+[combinatorial roadmap](../CombinatorialHeegaardFloer/README.md)) to its holomorphic
+counterpart built here. Every one depends on the analytic tower above, so the
+analytic track is the blocker, and the reconciliations are owned and tracked here
+rather than split across both roadmaps. The combinatorial side keeps only pointers
+back to this section.
+
+1. **`HF̂_st` = stabilized holomorphic `HF̂`** (the appendix of
+   [arXiv:0912.0830](https://arxiv.org/abs/0912.0830)): the Ozsváth–Stipsicz–Szabó
+   stable invariant agrees with the holomorphic `HF̂` of Lane F4 up to the tracked
+   `(𝔽 ⊕ 𝔽)`-factors, exactly `HF̂` for `b₁(Y) = 0`. Depends on F4.4 (stabilization
+   and diagram-move invariance) and the combinatorial Lane H.
+2. **Lattice homology = `HF⁻` of plumbed manifolds** (Zemke
+   [arXiv:2111.14962](https://arxiv.org/abs/2111.14962)): Némethi's `ℍ⁻` computes the
+   holomorphic `HF⁻` of every plumbed 3-manifold. Depends on the staged `HF^-`/`HF^∞`
+   flavors of F4.5 and the combinatorial Lane L.
+3. **Grid homology = knot Floer homology**
+   ([arXiv:math/0607691](https://arxiv.org/abs/math/0607691)): the combinatorial grid
+   invariant agrees with `HFK̂`, computed holomorphically from doubly-pointed
+   diagrams via the cylindrical reformulation of Lane F5. Depends on F5 and the
+   combinatorial Lane G.
+
+The first seam crossed end to end is the genus-1 computation below: `HF̂(L(p,q))`
+read off the holomorphic theory matches the combinatorial Lane H answer. ⚠ State
+each reconciliation naturality-ready (JTZ): the agreement is an isomorphism attached
+to a specific identification of the two complexes, not a bare rank equality.
 
 ## Acceptance criteria ("checks along the way")
 
@@ -292,7 +319,7 @@ Concrete checks that rule out vacuous or mis-stated definitions:
   Thurston [arXiv:0810.0687](https://arxiv.org/abs/0810.0687): Lane F5.
 - I. Zemke, [arXiv:2111.14962](https://arxiv.org/abs/2111.14962); Manolescu–
   Ozsváth–Sarkar [arXiv:math/0607691](https://arxiv.org/abs/math/0607691): the
-  reconciliation targets, shared with the combinatorial roadmap.
+  reconciliation targets (lattice = `HF⁻`, grid = HFK), owned by this roadmap.
 - A. Juhász, D. Thurston, I. Zemke,
   [arXiv:1210.4996](https://arxiv.org/abs/1210.4996): naturality, the capstone.
 - P. Kronheimer, T. Mrowka, *Monopoles and Three-Manifolds*, Cambridge, 2007: not
@@ -309,7 +336,8 @@ the bare symplectic/almost-complex definitions of F2.1; none of them waits for t
 [combinatorial roadmap](../CombinatorialHeegaardFloer/README.md). F1 should be
 planned jointly with the PDE roadmap rather than alone; F3 is the first analytic
 headline and F4 the second. The seams that join the two roadmaps are the
-reconciliation theorems, each stated on both sides.
+reconciliation theorems above; because each depends on this tower, the analytic
+track is what paces them, which is why they are tracked here.
 
 ## Acknowledgements
 

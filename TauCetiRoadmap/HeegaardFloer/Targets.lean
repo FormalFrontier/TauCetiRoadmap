@@ -8,8 +8,8 @@ The narrative roadmap is in `README.md`: the analytic tower — Morse homology
 package (Lane F1), J-holomorphic curves (Lane F2), exact Lagrangian Floer homology
 (Lane F3), and `HF̂` via holomorphic disks in `Sym^g(Σ)` (Lanes F4–F5). The
 combinatorial bodies of theory live in the sibling `CombinatorialHeegaardFloer`
-roadmap; the two meet at precisely-stated reconciliation theorems stated on both
-sides.
+roadmap; the reconciliation theorems that join each combinatorial invariant to its
+holomorphic counterpart are owned here, since they depend on this analytic tower.
 
 Nothing Floer-theoretic exists in Mathlib yet, so there are no compiled targets to
 state against the pin. As the prerequisite *types* land in `TauCeti/` (the analytic

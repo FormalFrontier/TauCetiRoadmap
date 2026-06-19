@@ -144,11 +144,11 @@ statement time is what keeps the formalized API reusable.
   `Mathlib/Analysis/InnerProductSpace/LaxMilgram.lean` (`IsCoercive`,
   `continuousLinearEquivOfBilin`, i.e. **Lax–Milgram itself**),
   `…/InnerProductSpace/Dual.lean` (**Fréchet–Riesz** `toDual`),
-  `…/InnerProductSpace/Adjoint.lean`, `…/InnerProductSpace/Projection.lean`.
+  `…/InnerProductSpace/Adjoint.lean`, `…/InnerProductSpace/Projection/`.
 - **Spectral theory** in `Mathlib/Analysis/InnerProductSpace/Spectrum.lean`: the spectral
   theorem for symmetric operators (finite-dim diagonalization; for **compact** operators,
   `finite_dimensional_eigenspace` and `eq_zero_of_forall_hasEigenvalue_eq_zero`), and
-  `Mathlib/Analysis/Normed/Operator/FredholmAlternative.lean` (the **Fredholm
+  `Mathlib/Analysis/Normed/Operator/Compact/FredholmAlternative.lean` (the **Fredholm
   alternative**). The eigenvalue/eigenfunction-expansion lane builds directly on these.
 - **Functional-analysis backbone:** Hahn–Banach
   (`Mathlib/Analysis/Normed/Module/HahnBanach.lean`), Banach–Steinhaus

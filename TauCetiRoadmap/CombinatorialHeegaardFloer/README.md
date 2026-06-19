@@ -13,7 +13,8 @@ Ozsváth–Stipsicz–Szabó stable HF̂ — carried all the way down (definitio
 proof, and applications). The analytic tower (Fredholm theory, transversality,
 Gromov compactness, gluing, Lagrangian Floer homology, holomorphic HF̂) is its
 companion [Heegaard Floer roadmap](../HeegaardFloer/README.md); the two meet at
-precisely-stated reconciliation theorems named in both.
+reconciliation theorems that the analytic roadmap states, since they wait on
+its slower track.
 
 This is **not a linear roadmap**. It is a family of lanes with many independent
 on-ramps; nearly every lane is publishable mathematics on its own, and several would
@@ -60,7 +61,8 @@ applications), plus one combinatorial neighbor:
 
 These three are exactly what this roadmap formalizes. The holomorphic theory is
 **on the roadmap, not a non-goal** — it is just the [other half](../HeegaardFloer/README.md),
-and the seams where the two halves meet are the reconciliation theorems below.
+and the seams where the two halves meet are the reconciliation theorems, which that
+roadmap owns (they are analytic-blocked, so they live with the slower track).
 
 ## The end goals
 
@@ -70,12 +72,12 @@ and the seams where the two halves meet are the reconciliation theorems below.
   Kronheimer–Mrowka with gauge theory), by pure combinatorics.
 - **v2 (3-manifolds, combinatorial).** Ozsváth–Stipsicz–Szabó's stable `HF̂_st(Y)`
   over 𝔽₂, with its purely topological invariance proof.
-- **Reconciliations (shared with the analytic roadmap).** Grid homology = knot Floer
-  homology ([arXiv:math/0607691](https://arxiv.org/abs/math/0607691)); `HF̂_st` =
-  stabilized holomorphic `HF̂` (the appendix of 0912.0830); lattice homology = `HF⁻`
-  of plumbed manifolds (Zemke). Each is a precise "the two definitions agree" theorem
-  where a combinatorial lane here meets the analytic one there; they are stated in
-  both roadmaps.
+- **Reconciliations (owned by the analytic roadmap).** Each invariant here has a
+  "the two definitions agree" theorem matching it to its holomorphic counterpart
+  (grid homology = knot Floer homology; `HF̂_st` = stabilized holomorphic `HF̂`;
+  lattice homology = `HF⁻` of plumbed manifolds). These seams wait on the
+  analytic tower, which is the long pole, so they are stated and tracked in the
+  [analytic roadmap](../HeegaardFloer/README.md), not here.
 
 ```lean
 -- the shapes we are building toward (state in Targets.lean as the types land):
@@ -305,14 +307,13 @@ holomorphic side lives.
 - C. Manolescu, P. Ozsváth, S. Sarkar,
   [arXiv:math/0607691](https://arxiv.org/abs/math/0607691); Manolescu–Ozsváth–
   Szabó–Thurston [arXiv:math/0610559](https://arxiv.org/abs/math/0610559): grid
-  homology's origins; the latter is the self-contained one. The former is the
-  **grid homology = HFK** reconciliation, shared with the analytic roadmap.
+  homology's origins; the latter is the self-contained one. (The former is also the
+  **grid homology = HFK** reconciliation, which the analytic roadmap owns.)
 - P. Ozsváth, A. Stipsicz, Z. Szabó,
   [arXiv:0912.0830](https://arxiv.org/abs/0912.0830) and
   [arXiv:1301.0480](https://arxiv.org/abs/1301.0480): Lane H.
-- A. Némethi, [arXiv:0709.0841](https://arxiv.org/abs/0709.0841); I. Zemke,
-  [arXiv:2111.14962](https://arxiv.org/abs/2111.14962): Lane L and its
-  reconciliation.
+- A. Némethi, [arXiv:0709.0841](https://arxiv.org/abs/0709.0841): Lane L. (Zemke's
+  `ℍ⁻ ≅ HF⁻` reconciliation is cited and tracked in the analytic roadmap.)
 - É. Gallais, [arXiv:0706.0089](https://arxiv.org/abs/0706.0089): sign assignments
   and ℤ coefficients for grid homology (G.12).
 - A. Juhász, D. Thurston, I. Zemke,
@@ -329,7 +330,7 @@ Lanes G.1–3 (with ALG), L, and K can all start immediately and independently. 
 spine to push hardest is **G**: it reaches a famous theorem (Milnor conjecture)
 entirely within reach of current technology. Lane H follows G once the nice-move
 idiom is established. Nothing here waits for the analytic roadmap; the seams between
-them are the reconciliation theorems, each stated on both sides.
+them are the reconciliation theorems, which the analytic roadmap states and tracks.
 
 ## Acknowledgements
 

@@ -7,8 +7,9 @@ The narrative roadmap is in `README.md`: the combinatorial bodies of theory that
 formalizable now — grid homology (Lane G), bigraded and filtered homological algebra
 (Lane ALG), knot-theory reconciliation (Lane K), lattice homology (Lane L), and the
 Ozsváth–Stipsicz–Szabó stable `HF̂` of 3-manifolds (Lane H). The analytic tower lives
-in the sibling `HeegaardFloer` roadmap; the two meet at precisely-stated
-reconciliation theorems stated on both sides.
+in the sibling `HeegaardFloer` roadmap, which also owns the reconciliation theorems
+that match each invariant here to its holomorphic counterpart (they are
+analytic-blocked, so they are tracked with the slower track).
 
 Nothing knot-theoretic or Floer-theoretic exists in Mathlib yet, so there are no
 compiled targets to state against the pin. As the prerequisite *types* land in
