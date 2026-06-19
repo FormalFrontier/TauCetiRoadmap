@@ -1,24 +1,21 @@
 # Roadmap: geometric topology and the solved Kirby-list problems
 
-A useful exercise while building the topology problems in
-[`leanprover/lean-eval`](https://github.com/leanprover/lean-eval) has been to walk Rob
-Kirby's problem list (`[Kir97]`, *Problems in Low-Dimensional Topology*) and its recent
-successor lists, pick out problems that have since been **solved** (sometimes by proving
-the negation of Kirby's question), and ask a narrower question than "can we prove this":
-can we even *state* the resolved theorem in Lean today?
+Rob Kirby's problem list (`[Kir97]`, *Problems in Low-Dimensional Topology*) and its
+successors hold many problems since **solved** (sometimes by proving the negation of
+Kirby's question). Walking that list while building the
+[`leanprover/lean-eval`](https://github.com/leanprover/lean-eval) topology problems raises a
+narrower question than "can we prove this": can we even *state* the resolved theorem in Lean
+today? For a good fraction the answer is no, not because the proof is hard but because the
+*statement* needs primitives Mathlib lacks: Dehn surgery, knot concordance, hyperbolic
+volume, Heegaard genus, foliation Euler classes, locally flat embeddings,
+diffeomorphism-group topologies. This roadmap builds, on top of Mathlib, what is needed to
+*state* (not prove) these theorems faithfully.
 
-For a good fraction of them the answer is no. Not because the proof is hard, but because
-the *statement* needs primitives Mathlib does not have: Dehn surgery, knot concordance,
-hyperbolic volume, Heegaard genus, foliation Euler classes, locally flat embeddings,
-diffeomorphism-group topologies. This roadmap builds, on top of Mathlib, everything
-needed to *state* (not prove) these theorems faithfully.
-
-To be clear about scope: this is about **statements**, not proofs. A faithful, idiomatic
-statement of "the Weeks manifold has the smallest volume among closed orientable
-hyperbolic 3-manifolds" is already a large, valuable target, independent of any hope of
-proving it. Several of the layers below (the manifold buildout, gluing, surgery, the
-diffeomorphism-group topology) are reusable library infrastructure whose value does not
-depend on any one Kirby problem.
+This is about **statements**, not proofs. A faithful statement of "the Weeks manifold has
+the smallest volume among closed orientable hyperbolic 3-manifolds" is already a large,
+valuable target. Many of the layers (the manifold buildout, gluing, surgery, the
+diffeomorphism-group topology) are reusable infrastructure whose value does not depend on
+any one Kirby problem.
 
 Suggested homes: `TauCeti/Geometry/Manifold/` (gluing, connected sum, tubular
 neighbourhoods, structure groups), `TauCeti/Geometry/Diffeomorphism/` (the C^∞ topology),
@@ -29,49 +26,39 @@ neighbourhoods, structure groups), `TauCeti/Geometry/Diffeomorphism/` (the C^∞
 ## Relationship to the Heegaard Floer roadmaps
 
 This roadmap **owns knot theory done properly** (layer 4) and the **concordance and
-cobordism foundations** (layer 6): the many presentations of a knot or link as first-class
-types, the maps between them, smoothly and topologically slice as clean definitions, the
-knot polynomials with the algorithms that compute them, the concordance group, and the
-cobordism category. These are foundational geometric topology that Dehn surgery (layer 5),
-concordance, and grid homology all build on, so they live here rather than inside any one
-homology theory. (An earlier draft deferred them to the combinatorial Heegaard Floer
-roadmap; they are more naturally ours, and that roadmap already treats knot theory as a
-non-prerequisite side-lane.)
+cobordism foundations** (layer 6): the presentations of a knot or link as first-class types
+and the maps between them, smoothly and topologically slice, the knot polynomials with their
+algorithms, the concordance group, and the cobordism category. These are foundational
+geometric topology that Dehn surgery, concordance, and grid homology all build on, so they
+live here rather than inside any one homology theory.
 
 The [combinatorial Heegaard Floer roadmap](../CombinatorialHeegaardFloer/README.md)
-*consumes* these knot types and *contributes* homological invariants of them: its
-grid-homology spine builds the concordance invariant `τ` and the slice-genus bound
-`|τ(K)| ≤ g_s(K)`, and its Lane K reconciles grid diagrams (one more presentation) with
-the presentations built here, via Cromwell's theorem. The dependency runs from there to
-here for the *definitions*, and from here to there for the *invariants*: this roadmap
-states `|τ(K)| ≤ g_s(K)` as a consumer of that roadmap's `τ`, and that roadmap states "a
-grid diagram presents this knot" as a consumer of this roadmap's presentation types. The
-shared convention is "a knot has no privileged representation".
+*consumes* these knot types and *contributes* homological invariants of them: it builds the
+concordance invariant `τ` and the slice-genus bound `|τ(K)| ≤ g_s(K)`, and its Lane K
+reconciles grid diagrams with the presentations built here (Cromwell's theorem). So the
+dependency runs there-to-here for the *definitions* and here-to-there for the *invariants*.
+The shared convention is "a knot has no privileged representation".
 
 ## Principles
 
-- **Connected all the way down to Mathlib.** Every layer starts exactly where Mathlib
-  leaves off today, with no floating definitions. Where a primitive already exists
-  (`ModelWithCorners`, the tangent bundle, `IsCoveringMap`, `HomotopyGroup`, singular
-  homology, the nascent Riemannian-metric library) we consume it; where it does not, the
-  roadmap adds it as an explicit dependency. The deliverable is a dependency graph rooted
-  in current Mathlib, not a wishlist. The inventories below name the exact files we build
-  on.
-- **Maximum generality where it is natural.** We do not specialise to dimensions 3 and 4
-  just because the Kirby problems live there. Build manifolds-with-boundary, gluing,
-  tubular neighbourhoods, and surgery in general dimension; work with arbitrary structure
-  groups (Top, PL, Diff, and `O(n)`, `SO(n)`) rather than hard-coding the smooth
-  orthogonal case; build the diffeomorphism-group topology for general manifolds rather
-  than just `S³`. The low-dimensional statements then fall out as instances. It is more
-  work up front, but it is the difference between a library and a pile of special cases.
-- **Treat the foundations as first-class goals.** A lot of the gap is just missing
-  differential and geometric topology. The roadmap treats "build connected sums" or
-  "build Dehn surgery" as library goals that happen to unlock several problems, not as
-  one-off scaffolding for a single theorem.
-- **Statements stay unbundled.** As in the PDE and Heegaard Floer roadmaps, named
-  hypotheses (locally flat vs smooth, Top vs PL vs Diff structure group, orientable vs
-  not) stay separate rather than bundled into one structure, so a theorem can be restated
-  in a neighbouring category without rebuilding the topology.
+- **Connected all the way down to Mathlib.** Every layer starts where Mathlib leaves off,
+  with no floating definitions: where a primitive exists (`ModelWithCorners`, the tangent
+  bundle, `IsCoveringMap`, `HomotopyGroup`, singular homology, the nascent Riemannian-metric
+  library) we consume it, named in the inventories below; otherwise the roadmap adds it as an
+  explicit dependency. The deliverable is a dependency graph rooted in current Mathlib, not a
+  wishlist.
+- **Maximum generality where it is natural.** Build manifolds-with-boundary, gluing, tubular
+  neighbourhoods, and surgery in general dimension, with arbitrary structure groups (Top, PL,
+  Diff, `O(n)`, `SO(n)`) rather than the smooth orthogonal case, and diffeomorphism-group
+  topologies for general manifolds rather than just `S³`; the low-dimensional statements then
+  fall out as instances. It is the difference between a library and a pile of special cases.
+- **Treat the foundations as first-class goals.** Much of the gap is just missing
+  differential and geometric topology, so "build connected sums" or "build Dehn surgery" are
+  library goals that happen to unlock several problems, not one-off scaffolding.
+- **Statements stay unbundled.** As in the PDE and Heegaard Floer roadmaps, named hypotheses
+  (locally flat vs smooth, Top vs PL vs Diff, orientable vs not) stay separate rather than
+  bundled, so a theorem can be restated in a neighbouring category without rebuilding the
+  topology.
 
 ## Inventory: what Mathlib gives us (consume)
 
