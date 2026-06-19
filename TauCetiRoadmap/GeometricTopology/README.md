@@ -178,19 +178,20 @@ be argued with: layers 1 and 5 in particular could be split further, and layers 
 share a Riemannian substrate that could be its own node.
 
 PL topology runs through two of these layers and the two accounts must agree: layer 1
-builds it the chart-based way (a `plGroupoid` of piecewise-linear transition maps, parallel
+builds it the chart-based way (a `PLGroupoid` of piecewise-linear transition maps, parallel
 to `contDiffGroupoid`), and layer 11 builds it the simplicial way (combinatorial manifolds,
 the complexes whose vertex links are spheres or balls). The reconciliation theorem
 (layer 11) that the polyhedron of a combinatorial manifold is a PL manifold, and
-conversely, is what ties them together, and is the reason layer 1's `plGroupoid` should be
+conversely, is what ties them together, and is the reason layer 1's `PLGroupoid` should be
 shaped with that proof in mind.
 
 ### Layer 1: manifold-library buildout (general dimension, general structure group)
 
 This is the spine. Almost everything below needs to cut a manifold open along a
-submanifold and reglue, or to compare the smooth, PL, and topological categories, and
-neither operation exists in Mathlib today. The work splits into a *gluing* track and a
-*structure-group* track that meet at the smoothing-and-triangulation comparison.
+submanifold and reglue, and none of it exists in Mathlib today. The work splits into a
+*gluing* track and a *structure-group* track. The comparison between the smooth, PL, and
+topological structures, where the two tracks would meet, is a major sub-project in its own
+right and is flagged separately below rather than treated as a quick deliverable.
 
 **From Mathlib.** `ModelWithCorners 𝕜 E H` and `IsManifold I n M`
 (`Mathlib/Geometry/Manifold/IsManifold/Basic.lean`); the boundary and interior of a
@@ -203,56 +204,97 @@ and the constructor `Pregroupoid.groupoid` (`Mathlib/Geometry/Manifold/Structure
 `contDiffGroupoid`, `analyticGroupoid`, and `continuousGroupoid`.
 
 **What to build, gluing track.**
-- The **boundary as a manifold.** `I.boundary M` is currently only a set; promote it to a
-  boundaryless `C^n` manifold of dimension one lower, with its inclusion a smooth
-  embedding. This is the prerequisite for every gluing below.
+- **Boundary as a manifold.** `I.boundary M` is currently only a set; promote it to a
+  boundaryless `C^n` manifold one dimension lower, with its inclusion a smooth embedding.
+  This is the prerequisite for every gluing below.
 - **Collar neighbourhoods.** A boundary component has a neighbourhood diffeomorphic to
-  `∂M × [0, 1)`. This is what makes a gluing smooth rather than merely topological, and is
-  the standard input to the well-definedness proofs.
-- **Gluing along a boundary diffeomorphism.** Given `f : ∂₁ ≃ₘ ∂₂` between (unions of)
-  boundary components of `M` and `N`, the pushout `M ∪_f N` as a smooth manifold, with the
-  two inclusions smooth embeddings and the expected universal property.
+  `∂M × [0, 1)` (the collar theorem; Hirsch, *Differential Topology*, GTM 33, §4.6; Lee,
+  *Introduction to Smooth Manifolds*, GTM 218, 2nd ed., Theorem 9.25). Collars are what make
+  a gluing smooth rather than merely topological, and they feed the well-definedness proofs.
+- **Gluing along a piece of the boundary.** The general operation glues a codimension-0
+  submanifold-with-corners `A ⊆ ∂M` to one `B ⊆ ∂N` along a diffeomorphism `f : A ≃ₘ B`,
+  producing `M ∪_f N` with corners along `∂A`. Full-boundary gluing is the special case
+  `A = ∂M`, `B = ∂N`; **handle attachment** is `N` a handle `Dᵏ × Dⁿ⁻ᵏ` glued along
+  `Sᵏ⁻¹ × Dⁿ⁻ᵏ ⊆ ∂N`; and partial gluings (a rectangle onto a disc along two of its edges,
+  say) are the same def with `A`, `B` proper faces. Set this up for arbitrary manifolds, not
+  only handles, because everything downstream (surgery, handlebodies, cobordism
+  composition) is a special case of it.
 - **Tubular neighbourhoods.** A closed submanifold has a neighbourhood diffeomorphic to the
-  total space of its normal bundle (consume Mathlib's smooth vector bundles); the disc- and
+  total space of its normal bundle (tubular neighbourhood theorem; Hirsch GTM 33, §4.5; Lee
+  GTM 218, Theorem 6.24), consuming Mathlib's smooth vector bundles; the disc- and
   sphere-bundle versions are the surgery interface for layer 5.
-- **Connected sum.** `M # N` by deleting an embedded open disc from each and gluing along
-  the resulting sphere; independence of the disc (given orientations), hence
-  well-definedness up to diffeomorphism, is itself a target.
+- **Connected sum, with the choices explicit.** The definition must *take* the data it
+  depends on: an orientation on each summand and an embedding of the closed `n`-ball into
+  each, inducing opposite orientations; `M # N` deletes the open balls and glues along the
+  resulting spheres. Independence of the balls is then a *theorem*, not part of the
+  definition, proved from the disc theorem (any two orientation-compatible ball embeddings
+  into a connected manifold are ambient isotopic; Palais, *Extending diffeomorphisms*, Proc.
+  AMS 11 (1960) 274–277; Hirsch GTM 33, §8.3, Theorem 8.3.1). A downstream wrapper then
+  picks the balls on a connected oriented manifold and inherits well-definedness from that
+  theorem.
 
 ```lean
--- shapes (state in Targets.lean as the types land):
 -- the boundary is a boundaryless manifold one dimension down
 -- instance : IsManifold (I.boundaryModel) n (I.boundary M)
--- gluing along a boundary diffeomorphism
--- def glue (M N) (f : I.boundary M ≃ₘ⟮…⟯ I.boundary N) : Manifold …
--- connected sum and its first identity
--- def connectedSum (M N) [Orientable …] : Manifold …
--- theorem connectedSum_sphere (M) : connectedSum M (sphere n) ≃ₘ M
+-- gluing along a piece of the boundary (faces A ⊆ ∂M, B ⊆ ∂N); produces corners along ∂A
+-- def glue (M N) (A : Face (I.boundary M)) (B : Face (I.boundary N)) (f : A ≃ₘ⟮…⟯ B) : Manifold …
+-- handle attachment and full-boundary gluing are special cases of `glue`
+-- def attachHandle (M) (k) (φ : Embedding (sphere (k-1) ×ₘ ball (n-k)) (I.boundary M)) : Manifold …
+--
+-- connected sum TAKES the balls; independence is a theorem, not baked into the def
+-- def connectedSum (e₁ : Embedding (closedBall n) M) (e₂ : Embedding (closedBall n) N)
+--     (h : OrientationReversing e₁ e₂) : Manifold …
+-- theorem connectedSum_indep (e₁ e₁' e₂ e₂' …) : connectedSum e₁ e₂ _ ≃ₘ connectedSum e₁' e₂' _
+-- the picking wrapper, on connected oriented summands, and its first identity
+-- noncomputable def connSum (M N) [Connected M] [Connected N] [Oriented M] [Oriented N] : Manifold …
+-- theorem connSum_sphere (M) : connSum M (sphere n) ≃ₘ M
 ```
 
 **What to build, structure-group track.**
-- A **PL pregroupoid** `plPregroupoid` of piecewise-linear homeomorphisms between open
-  subsets of the model, and `plGroupoid := Pregroupoid.groupoid plPregroupoid`, exactly
-  parallel to `contDiffGroupoid`. A PL manifold is then `HasGroupoid M plGroupoid`.
-- The **comparison of structure groups** `contDiffGroupoid ≤ plGroupoid ≤ continuousGroupoid`
-  (a smooth atlas is PL after subdivision; a PL atlas is continuous), so that "Diff
-  structure", "PL structure", and "Top structure" become values of one parameter and a
-  theorem can be stated over a variable structure group and instantiated three ways.
-- The **smoothing-and-triangulation comparison** as the place the two tracks meet: the maps
-  "a smooth structure determines a PL structure" (Whitehead) and "a PL structure determines
-  a topological structure", stated as functions between the structure data, with the
-  obstruction theory (Kirby–Siebenmann) a later, separable target. ⚠ The comparison is
-  direction-dependent: smooth determines PL cleanly, but the converse and the Top-to-PL
-  question are exactly where exotic phenomena live; keep each direction a named, separate
-  target.
+- **The PL pregroupoid, spelled out.** Capitalised `PLPregroupoid`. The underlying predicate
+  is *not* "affine on the pieces of a finite triangulation": open subsets of the model are
+  non-compact, so the right notion is local and locally finite. A continuous `f : U → model`
+  on an open `U` is PL if every point of `U` has a neighbourhood on which `f` is affine on
+  each cell of a *locally finite* polyhedral subdivision, equivalently (Rourke–Sanderson,
+  *Introduction to PL Topology*, Chapters 1–2) if the graph of `f` near each point is a
+  polyhedron. This predicate is what must satisfy Mathlib's `Pregroupoid` laws (locality,
+  restriction to opens, closure under composition, identity), and the locally-finite
+  formulation is exactly what makes restriction-to-opens and composition hold; a
+  finite-pieces formulation fails restriction. Build the predicate for the half-space and
+  quadrant models too, so PL manifolds-with-corners are available. Then
+  `PLGroupoid := PLPregroupoid.groupoid`, and a PL manifold is `HasGroupoid M PLGroupoid`.
+- **The one genuine groupoid inclusion**, `PLGroupoid ≤ continuousGroupoid` (PL maps are
+  continuous), giving the forgetful "PL implies Top". ⚠ There is *no* inclusion
+  `contDiffGroupoid ≤ PLGroupoid`: a smooth transition map is not literally PL. The relation
+  between smooth and PL structures is the Whitehead smoothing comparison below, a map between
+  structures rather than a containment of groupoids, and it is not cheap.
 
-**Design notes.** Keep orientability a separate predicate, not bundled into the manifold.
-State gluing for manifolds-with-corners from the start (gluing two manifolds-with-boundary
-produces corners along the seam unless they are straightened), so the API composes with
-itself. Define `plGroupoid` so that layer 11's link-condition definition of a combinatorial
-manifold can be *proved equivalent* to it (the "combinatorial manifold = PL manifold"
-reconciliation), rather than in a form that makes that proof awkward; this is the concrete
-sense in which the chart-based and simplicial accounts of PL topology must agree.
+**The smoothing-and-triangulation comparison (a sub-project, flagged).** Relating the three
+categories is a major undertaking, arguably its own roadmap, and is *not* a quick layer-1
+deliverable. Stage it, hardest part last:
+1. **Smooth implies PL.** Every smooth manifold has an essentially unique PL structure (a
+   smooth triangulation, Whitehead). References: J. H. C. Whitehead, *On C¹-complexes*, Ann.
+   of Math. 41 (1940) 809–824; the full modern development in J. Munkres, *Elementary
+   Differential Topology* (Annals of Math. Studies 54, 1966), the smoothing-of-triangulations
+   and uniqueness sections. Classical and self-contained, but already a substantial body of
+   work (Whitney/Cairns triangulation plus the uniqueness argument).
+2. **PL implies Top.** The forgetful direction, immediate from the groupoid inclusion above.
+3. **Top to PL, the smoothing obstruction.** The deep, far-horizon part: the
+   Kirby–Siebenmann obstruction in `H⁴(M; ℤ/2)` to a PL structure, and the failure of the
+   Hauptvermutung. Reference: R. Kirby, L. Siebenmann, *Foundational Essays on Topological
+   Manifolds, Smoothings, and Triangulations* (Annals of Math. Studies 88, 1977), Essays
+   IV–V. Treat this as genuinely speculative, and keep each direction a separate named target
+   so the easy ones are never blocked on the hard one.
+
+**Design notes.** Keep orientability a separate predicate, not bundled into the manifold
+(the connected-sum API above already depends on this). State gluing in the corners category
+from the start, since gluing along a proper face of the boundary *produces* corners along
+the seam, so the API must already live there to compose with itself. Define `PLGroupoid` so
+that layer 11's link-condition definition of a combinatorial manifold can be *proved
+equivalent* to it (the "combinatorial manifold = PL manifold" reconciliation; Rourke–Sanderson,
+Chapter 3); this is the concrete sense in which the chart-based and simplicial accounts of
+PL topology must agree, and it is why the locally-finite predicate above is the right one, a
+triangulation gives exactly locally finite affine pieces.
 
 **Unlocks.** Smoothability of `⋆RP⁴ # ⋆CP²`, `[Kir97, Problem 4.82]` (connected sum plus a
 smooth structure on a fake `RP⁴`), and, as infrastructure, every gluing and surgery below.
@@ -697,10 +739,10 @@ groupoid.
   `(n-1)`-sphere (interior point) or `(n-1)`-ball (boundary point). This is the definition
   that "has the correct links to be a manifold".
 - **The reconciliation with layer 1.** Prove that the polyhedron of a combinatorial
-  `n`-manifold is a PL `n`-manifold in the sense of layer 1's `plGroupoid`, and conversely
+  `n`-manifold is a PL `n`-manifold in the sense of layer 1's `PLGroupoid`, and conversely
   that every PL manifold admits a combinatorial triangulation (Whitehead). This is the
   theorem that makes "PL manifold via charts" and "simplicial complex with correct links"
-  the same notion, and it is the concrete reason layer 1's `plGroupoid` should be defined to
+  the same notion, and it is the concrete reason layer 1's `PLGroupoid` should be defined to
   make this proof natural. ⚠ This is genuinely subtle and not merely bookkeeping: recognizing
   a combinatorial sphere is undecidable in high dimensions (Novikov), the Hauptvermutung
   (any two triangulations have a common subdivision) is *false* for topological manifolds in
@@ -716,7 +758,7 @@ groupoid.
 -- def realize (K : AbstractSimplicialComplex ι) : TopCat := …      -- the polyhedron |K|
 -- def link (K) (σ : K.faces) : AbstractSimplicialComplex ι := …
 -- def IsCombinatorialManifold (K) (n : ℕ) : Prop := ∀ v, IsCombinatorialSphereOrBall (link K {v}) (n-1)
--- theorem realize_combinatorialManifold_isPL (K) (h : IsCombinatorialManifold K n) : HasGroupoid (realize K) plGroupoid
+-- theorem realize_combinatorialManifold_isPL (K) (h : IsCombinatorialManifold K n) : HasGroupoid (realize K) PLGroupoid
 -- def IsTriangulable (M : TopCat) : Prop := ∃ K, Nonempty (realize K ≃ₜ M)
 -- theorem manolescu_not_triangulable : ∃ M : ClosedTopological5Manifold, ¬ IsTriangulable M
 -- def Collapsible (K) : Prop := …
@@ -768,8 +810,22 @@ Concrete checks that rule out vacuous or mis-stated definitions:
   H. Zieschang, *Knots*, de Gruyter (2003): the knot-theory foundations of layer 4
   (presentations, Reidemeister and Markov theorems, Seifert surfaces, the polynomials).
 - C. Rourke, B. Sanderson, *Introduction to Piecewise-Linear Topology*, Springer (1972):
-  the PL and combinatorial-manifold foundations shared by layers 1 and 11 (the link
-  condition, regular neighbourhoods, collapse).
+  the PL and combinatorial-manifold foundations shared by layers 1 and 11 (PL maps and
+  polyhedra in Chapters 1–2, the link condition and regular neighbourhoods in Chapter 3,
+  collapse).
+- M. Hirsch, *Differential Topology*, Springer GTM 33 (1976): the layer-1 smooth-gluing
+  toolkit, with precise statements: collars (§4.6), tubular neighbourhoods (§4.5), and the
+  disc theorem behind well-defined connected sum (§8.3, Theorem 8.3.1). J. Lee,
+  *Introduction to Smooth Manifolds*, Springer GTM 218, 2nd ed. (2013) is the same material
+  at a gentler pace (collars, Theorem 9.25; tubular neighbourhoods, Theorem 6.24).
+- R. Palais, *Extending diffeomorphisms*, Proc. Amer. Math. Soc. 11 (1960) 274–277: the
+  isotopy uniqueness of ball embeddings, used for connected-sum well-definedness (layer 1).
+- J. H. C. Whitehead, *On C¹-complexes*, Ann. of Math. 41 (1940) 809–824, and J. Munkres,
+  *Elementary Differential Topology* (Annals of Math. Studies 54, 1966): the smooth-implies-PL
+  half of the layer-1 smoothing comparison.
+- R. Kirby, L. Siebenmann, *Foundational Essays on Topological Manifolds, Smoothings, and
+  Triangulations* (Annals of Math. Studies 88, 1977), Essays IV–V: the Top-to-PL obstruction
+  and the failure of the Hauptvermutung, the far-horizon part of the layer-1 comparison.
 - G. Perelman, *The entropy formula for the Ricci flow and its geometric applications*,
   [arXiv:math/0211159](https://arxiv.org/abs/math/0211159); *Ricci flow with surgery on
   three-manifolds*, [arXiv:math/0303109](https://arxiv.org/abs/math/0303109);
