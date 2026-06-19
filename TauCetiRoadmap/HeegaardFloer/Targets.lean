@@ -1,24 +1,24 @@
 import Mathlib
 
 /-!
-# Heegaard Floer and knot Floer homology: target signatures
+# Heegaard Floer homology, analytically: target signatures
 
-The narrative roadmap is in `README.md`: two families of lanes, combinatorial
-(grid homology, lattice homology, the Ozsváth–Stipsicz–Szabó stable `HF̂`) and
-analytic (Morse homology, Fredholm/Sard–Smale, the Cauchy–Riemann elliptic
-package, J-holomorphic curves, Lagrangian Floer homology, `HF̂` via `Sym^g`),
-meeting at precisely-stated reconciliation theorems.
+The narrative roadmap is in `README.md`: the analytic tower — Morse homology
+(Lane M), the Fredholm/Sard–Smale substrate (Lane F0), the Cauchy–Riemann elliptic
+package (Lane F1), J-holomorphic curves (Lane F2), exact Lagrangian Floer homology
+(Lane F3), and `HF̂` via holomorphic disks in `Sym^g(Σ)` (Lanes F4–F5). The
+combinatorial bodies of theory live in the sibling `CombinatorialHeegaardFloer`
+roadmap; the two meet at precisely-stated reconciliation theorems stated on both
+sides.
 
-Nothing knot-theoretic or Floer-theoretic exists in Mathlib yet, so there are no
-compiled targets to state against the pin. As the prerequisite *types* land in
-`TauCeti/` (grid diagrams and grid states first; then bigraded complexes over
-`𝔽₂[V₁,…,Vₙ]`; then plumbing lattices; then the analytic substrate), state each
+Nothing Floer-theoretic exists in Mathlib yet, so there are no compiled targets to
+state against the pin. As the prerequisite *types* land in `TauCeti/` (the analytic
+substrate: finite-dimensional Sard and Fredholm operators first; then the
+Cauchy–Riemann package; then almost complex structures and `Sym^g(Σ)`), state each
 lane's milestones here with `sorry` (human-owned roadmap territory, so `sorry` is
-allowed). The natural first new theorems (Lane G.3–G.5) are
-
-  `∂² = 0` for the fully blocked grid complex over `𝔽₂`,
-  `χ(GĤ K) = Δ_K(t)`, and
-  `GH' G ≅ GH' G'` for grids related by commutation and stabilization moves.
+allowed). The natural first new theorems are Morse homology's `∂² = 0` and its
+isomorphism with Mathlib's singular homology (Lane M), then `HF(L, φ(L)) ≅ H_*(L)`
+for exact Lagrangians in `T*M` (Lane F3).
 -/
 
 namespace TauCetiRoadmap.HeegaardFloer

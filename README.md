@@ -17,9 +17,10 @@ industry groups.
 2. [The Jacobian challenge](TauCetiRoadmap/JacobianChallenge/README.md)
 3. [Reductive algebraic groups](TauCetiRoadmap/ReductiveGroups/README.md)
 4. [Partial differential equations](TauCetiRoadmap/PDE/README.md)
-5. [Heegaard Floer and knot Floer homology](TauCetiRoadmap/HeegaardFloer/README.md)
-6. [Multiquadratic fields and genus theory](TauCetiRoadmap/Multiquadratic/README.md)
-7. [Effective arithmetic bounds and geometry of numbers](TauCetiRoadmap/EffectiveBounds/README.md)
+5. [Combinatorial Heegaard Floer and grid homology](TauCetiRoadmap/CombinatorialHeegaardFloer/README.md)
+6. [Heegaard Floer homology, analytically](TauCetiRoadmap/HeegaardFloer/README.md)
+7. [Multiquadratic fields and genus theory](TauCetiRoadmap/Multiquadratic/README.md)
+8. [Effective arithmetic bounds and geometry of numbers](TauCetiRoadmap/EffectiveBounds/README.md)
 
 ## How changes are made
 
