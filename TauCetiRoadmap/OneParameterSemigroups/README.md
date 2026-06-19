@@ -155,14 +155,16 @@ explicitly.
 - The bridge lemma: a finite measure's Fourier transform is continuous positive-definite
   (`pd_quadratic_form_of_measure`).
 
-**Milestone 1 — Bochner's theorem on `V`.** A continuous positive-definite function on a
-finite-dimensional real inner-product space `V` **iff** the Fourier transform of a finite
-positive measure on `V`. ⚠ **Verified absent from Mathlib (v4.31)** — Mathlib's "Bochner" is
-the *integral*, and positive-definiteness is only for *matrices*/quadratic forms; there is no
-continuous-PD-*function* notion or Bochner representation. Build it: define continuous PD
-functions on `V`, then either (i) the positive linear functional `f ↦ ∫ f̂ · φ` + Riesz–Markov,
-or (ii) `charFun` + Lévy/Prokhorov tightness. State for general `V`; specialize to `ℝᵈ` as a
-corollary. **Stretch:** LCA group via Pontryagin.
+**Milestone 1 — Bochner's theorem on `V`.** A function on a finite-dimensional real
+inner-product space `V` is continuous and positive-definite **iff** it is the Fourier
+transform of a finite positive measure on `V`. State it for general `V`, with `ℝᵈ` as a
+corollary.
+
+⚠ **Verified absent from Mathlib (v4.31):** Mathlib's "Bochner" is the *integral*, and its
+positive-definiteness is only for *matrices* / quadratic forms — there is no
+continuous-positive-definite-*function* notion, and no Bochner representation. So this is
+build-here. Two routes: (i) the positive linear functional `f ↦ ∫ f̂ · φ` + Riesz–Markov, or
+(ii) `charFun` + Lévy/Prokhorov tightness. **Stretch:** an LCA group via Pontryagin duality.
 
 **Milestone 2 — BCR semigroup–Bochner (Berg–Christensen–Ressel 4.1.13).** A bounded
 continuous positive-definite function on the involutive semigroup `[0,∞) × V` is the
@@ -179,9 +181,9 @@ variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [FiniteDim
 --       ∀ t ≥ 0, ∀ a, F (t, a) = ∫ (p, q), Real.exp (-t * p) * Complex.exp (I * ⟪a, q⟫) ∂μ
 ```
 
-**Acceptance examples.** Bochner on `V = ℝ` recovers the classical statement; **BCR at
-`V = 0`** recovers exactly Bernstein; a Gaussian `e^{−‖a‖²}` is positive-definite with the
-expected Gaussian representing measure.
+**Acceptance examples.** Bochner on `V = ℝ` recovers the classical statement; the case
+`V = 0` (no spatial variable) collapses BCR back to Bernstein; a Gaussian `a ↦ e^{−‖a‖²}` is
+positive-definite, with the expected Gaussian representing measure.
 
 ---
 
