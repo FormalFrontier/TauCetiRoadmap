@@ -117,42 +117,12 @@ Verified against the pinned Mathlib (`Mathlib/`, commit `9caeba1`, Lean `v4.31.0
   layer 4's knot theory (colourings and braid groups), built here and consumed in turn by
   the combinatorial Heegaard Floer roadmap's Lane K.
 
-## Inventory: what is missing (build)
-
-Everything geometric-topological past the smooth-manifold-and-tangent-bundle level. In
-rough dependency order:
-
-- **PL and Top manifold categories as structure groups.** Mathlib has the `contDiff`,
-  `analytic`, and `continuous` groupoids, but no piecewise-linear groupoid and no
-  category-of-structure-groups API tying Top, PL, and Diff together. Smoothing and
-  triangulation theory (the obstruction theory relating the three) is entirely absent.
-- **Gluing and surgery primitives.** Connected sum, gluing two manifolds along
-  diffeomorphic boundary pieces, tubular neighbourhoods, handle attachment, and
-  Dehn-style surgery (cut out a tubular neighbourhood of a submanifold, reglue by a
-  diffeomorphism of the boundary). None of this exists; it is the load-bearing core of
-  layers 1 and 5.
-- **Locally flat embeddings** in general dimension (a topological embedding that is
-  locally a flat slice in a chart). Absent.
-- **Diffeomorphism groups as topological groups** with the C^∞ topology, and the
-  smooth-families ↔ continuous-maps-into-`Diff` correspondence. The `Diffeomorph` *type*
-  exists; the group object and its topology do not.
-- **Knot theory beyond `Quandle`**: the presentations of a knot or link as first-class
-  types, the maps between them and the adequacy theorems, smoothly and topologically slice,
-  and the knot polynomials with algorithms. Absent, and owned here (layer 4).
-- **Knot complements as manifolds**, slopes, solid-torus gluing (Dehn surgery proper).
-  Absent; built on layer 4's knots and layer 1's gluing.
-- **The 4-dimensional topology behind topological sliceness** (Freedman's theory): topologically
-  locally flat surfaces in the 4-ball, and topological slice discs. Absent.
-- **Riemannian volume and curvature.** The metric-and-distance layer exists; the Riemannian
-  volume measure, sectional and Ricci curvature, complete constant-curvature metrics,
-  hyperbolic structures, and the volume of a hyperbolic manifold are all missing.
-- **Thurston geometries and geometric decomposition** (the eight model geometries, the
-  JSJ decomposition, the statement of a geometric structure on a piece). Absent.
-- **Heegaard splittings and Heegaard genus** of a 3-manifold. Absent.
-- **Foliations and their Euler class.** Absent.
-- **Geometric realization of abstract simplicial complexes** as topological spaces (the
-  realization functor exists for simplicial *sets*, but not the triangulation-of-a-manifold
-  notion), PL structures, and simplicial or CW collapse. Absent.
+Everything geometric-topological past this smooth-manifold-and-tangent-bundle level is
+missing from Mathlib: the PL and Top structure groups, gluing and surgery, knot theory, the
+diffeomorphism-group topology, and the geometric-structure layers (Riemannian volume,
+hyperbolic and Thurston geometries, Heegaard genus, foliations, triangulations). Each layer
+below says exactly what it starts from and what is absent, so the build list is the layers
+themselves rather than a separate enumeration here.
 
 ## The layers, bottom-up from Mathlib
 
