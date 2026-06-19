@@ -821,9 +821,15 @@ The problem list, then the standard text and the resolving paper for each layer,
 section or theorem numbers where a contributor would actually look. The recent resolving
 papers were checked against the literature when this roadmap was written; the textbook
 references are at chapter or section granularity rather than edition-specific page numbers.
+Direct links are given wherever a source is freely and legitimately available online (arXiv,
+author pages, and open repositories), so an agent can fetch it; the remaining books are in
+print and cited without a link.
 
 - R. Kirby (ed.), *Problems in Low-Dimensional Topology*, in *Geometric Topology*
   (AMS/IP Stud. Adv. Math. 2.2, 1997): the source problem list `[Kir97]`.
+- Freely available 3-manifold background, useful across layers 5, 8, and 9: A. Hatcher,
+  *Notes on Basic 3-Manifold Topology* (prime and torus decomposition, surgery basics),
+  [pi.math.cornell.edu/~hatcher/3M/3M.pdf](https://pi.math.cornell.edu/~hatcher/3M/3M.pdf).
 
 *Layer 1 (manifold buildout, gluing, structure groups).*
 - M. Hirsch, *Differential Topology*, Springer GTM 33 (1976): the smooth-gluing toolkit,
@@ -846,7 +852,8 @@ references are at chapter or section granularity rather than edition-specific pa
 
 *Layer 2 (locally flat embeddings).*
 - R. Daverman, G. Venema, *Embeddings in Manifolds*, AMS GSM 106 (2009): the general theory
-  of locally flat (and wild) embeddings.
+  of locally flat (and wild) embeddings (a scanned copy is on the Ranicki archive,
+  [webhomes.maths.ed.ac.uk/~v1ranick/papers/davenema.pdf](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/davenema.pdf)).
 - R. Kirby, *Stable homeomorphisms and the annulus conjecture*, Ann. of Math. 89 (1969)
   575–582 (dimension `≥ 5`); F. Quinn, *Ends of maps III: dimensions 4 and 5*, J.
   Differential Geom. 17 (1982) (dimension 4); M. Freedman, F. Quinn, *Topology of
@@ -896,7 +903,9 @@ references are at chapter or section granularity rather than edition-specific pa
   curvature and the Riemannian volume form; W. Thurston, *Three-Dimensional Geometry and
   Topology, Vol. 1*, Princeton (1997), and J. Ratcliffe, *Foundations of Hyperbolic
   Manifolds*, Springer GTM 149, for hyperbolic structures and Mostow rigidity (Mostow 1968,
-  Prasad 1973).
+  Prasad 1973). Thurston's 1978–80 Princeton notes, *The Geometry and Topology of
+  Three-Manifolds*, cover the same hyperbolic material and are freely downloadable from
+  SLMath, [library.slmath.org/nonmsri/gt3m](https://library.slmath.org/nonmsri/gt3m/).
 - I. Agol, *The virtual Haken conjecture* (appendix with Groves and Manning), Doc. Math. 18
   (2013), [arXiv:1204.2810](https://arxiv.org/abs/1204.2810), `[Kir97, 3.51]`; D. Gabai, R.
   Meyerhoff, P. Milley, *Minimum volume cusped hyperbolic three-manifolds*, J. Amer. Math.
@@ -910,8 +919,8 @@ references are at chapter or section granularity rather than edition-specific pa
 - G. Perelman, [arXiv:math/0211159](https://arxiv.org/abs/math/0211159),
   [arXiv:math/0303109](https://arxiv.org/abs/math/0303109),
   [arXiv:math/0307245](https://arxiv.org/abs/math/0307245); J. Morgan, G. Tian, *Ricci Flow
-  and the Poincaré Conjecture*, Clay Math. Monographs 3 (2007): Geometrization,
-  `[Kir97, 3.45]`.
+  and the Poincaré Conjecture*, Clay Math. Monographs 3 (2007), full text at
+  [arXiv:math/0607607](https://arxiv.org/abs/math/0607607): Geometrization, `[Kir97, 3.45]`.
 
 *Layer 9 (Heegaard genus).*
 - M. Scharlemann, *Heegaard splittings of compact 3-manifolds*,
@@ -923,8 +932,10 @@ references are at chapter or section granularity rather than edition-specific pa
 
 *Layer 10 (foliations and the Euler class).*
 - D. Calegari, *Foliations and the Geometry of 3-Manifolds*, Oxford (2007), freely available
-  online; A. Candel, L. Conlon, *Foliations I–II*, AMS GSM 23 and 60; W. Thurston, *A norm
-  for the homology of 3-manifolds*, Mem. Amer. Math. Soc. 59 (1986).
+  on the author's page,
+  [math.uchicago.edu/~dannyc/books/foliations/oupbook.pdf](https://math.uchicago.edu/~dannyc/books/foliations/oupbook.pdf);
+  A. Candel, L. Conlon, *Foliations I–II*, AMS GSM 23 and 60; W. Thurston, *A norm for the
+  homology of 3-manifolds*, Mem. Amer. Math. Soc. 59 (1986).
 - D. Gabai, M. Yazdi, *On Thurston's Euler class-one conjecture*, Acta Math. 225 (2020),
   [arXiv:1603.03822](https://arxiv.org/abs/1603.03822): the disproof.
 
