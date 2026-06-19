@@ -221,16 +221,19 @@ building them here.
 
 ### Lane K: knot-theory reconciliation
 
-The "no privileged representation" lane: planar diagrams / oriented PD codes,
-Reidemeister moves, braid groups and Markov/Alexander theorems (coordinate with
-Hannah Fechtner's braid-group program rather than duplicating it), the Alexander
-polynomial by other routes (Kauffman states, Burau) reconciled with G.4's grid
-determinant, and the **adequacy theorems**: Cromwell's theorem (grid moves generate
-grid equivalence of links; book Appendix B.4, elementary but fiddly diagrammatic
-combinatorics) and Reidemeister's theorem, ultimately connecting grid diagrams to
-embeddings `S¹ ↪ S³` (or `ℝ³`). ⚠ Prior art (Isabelle/AFP knot theory; the Lean
-`leanknot` experiment) shows diagram-calculus *adequacy* is where such projects
-stall, which is exactly why Lane G does not wait for this lane.
+The "no privileged representation" lane, which **consumes** the knot theory built in
+the [geometric-topology roadmap](../GeometricTopology/README.md) (layer 4: the
+presentations of a knot or link as first-class types, the maps between them, slice-ness,
+and the knot polynomials) and connects grid diagrams to it. Grid diagrams are one more
+presentation; this lane adds the grid-specific **adequacy theorem**, Cromwell's theorem
+(grid moves generate grid equivalence of links; book Appendix B.4, elementary but fiddly
+diagrammatic combinatorics), reconciling them with that roadmap's diagrams, braid closures,
+and embeddings `S¹ ↪ S³`, and checks G.4's grid determinant against that roadmap's
+Alexander polynomial. ⚠ Prior art (Isabelle/AFP knot theory; the Lean `leanknot`
+experiment) shows diagram-calculus *adequacy* is where such projects stall, which is
+exactly why Lane G does not wait for this lane. ⚠ Coordinate the braid-group and
+diagram-calculus foundations with the geometric-topology roadmap (and Hannah Fechtner's
+braid-group program) rather than duplicating them here.
 
 ### Lane L: lattice homology
 
