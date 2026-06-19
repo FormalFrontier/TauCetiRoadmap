@@ -260,32 +260,59 @@ charts; this layer generalises it to a reusable definition.
 topological-manifold structure group `continuousGroupoid` (layer 1).
 
 **What to build.**
-- The predicate **`IsLocallyFlat f`** for a topological embedding `f : N → M` of
-  topological manifolds, via "a slice chart exists at every image point", with the basic
-  closure properties (restriction, composition with homeomorphisms). The general theory of
-  such embeddings is Daverman–Venema, *Embeddings in Manifolds* (GSM 106).
-- **Local flatness vs the smooth and PL cases**: a smooth or PL embedding is locally flat,
-  stated against layer 1's structure groups, so the low-codimension subtleties are isolated
-  in exactly one definition.
-- The **product-region statement**: a locally flat embedded `Sⁿ⁻¹ × [0,1]` between two
-  parallel locally flat spheres bounds a region homeomorphic to `Sⁿ⁻¹ × [0,1]` (the shape
-  of the Annulus Conjecture).
+- The predicate **`IsLocallyFlat f`** for a topological embedding `f : N → M` of topological
+  manifolds (allowing boundary), via "a slice chart `ℝⁿ ⊆ ℝᵐ` exists at every image point".
+  The general theory is Daverman–Venema, *Embeddings in Manifolds* (GSM 106).
+- **The structural API**, which is most of the work and what every later use depends on.
+  Local flatness is a *local* condition (it holds iff it holds near each image point), so the
+  load-bearing content is its closure properties:
+  - **restriction**: `f` restricted to an open `U ⊆ N`, or corestricted to an open `V ⊆ M`
+    containing the image, stays locally flat;
+  - **homeomorphism invariance**: `h ∘ f ∘ k` is locally flat for homeomorphisms `h` of the
+    codomain and `k` of the domain, and more generally for chart maps and open embeddings on
+    either side;
+  - **products**: `f × g` is locally flat, since a product of slice charts is a slice chart;
+    this is the building block for the product regions below;
+  - **composition**: hypotheses under which `N ↪ M` and `M ↪ P` locally flat give `N ↪ P`
+    locally flat. ⚠ This is *not* a free consequence of the definition; the two flattening
+    charts have to be made compatible, so state it with explicit hypotheses rather than
+    assuming it.
+  These mirror Mathlib's `IsEmbedding` / `IsOpenEmbedding` closure lemmas, and are the
+  reusable surface the rest of the roadmap calls.
+- **Codimension-1 collaring** (Brown): a locally flat embedded `(n-1)`-manifold in an
+  `n`-manifold is locally bicollared, and a locally flat `(n-1)`-sphere in `Sⁿ` is globally
+  bicollared (Brown, *Locally flat imbeddings of topological manifolds*, Ann. of Math. 75
+  (1962) 331–341). This is the structural theorem the Annulus Conjecture rests on, and the
+  place local flatness does real work: it is false for the wild Alexander horned sphere.
+- **Smooth and PL embeddings are locally flat**, stated against layer 1's structure groups,
+  so the low-codimension subtleties are isolated in this one predicate.
+- **The Annulus Conjecture**, stated from the right hypothesis: two *disjoint* locally flat
+  `(n-1)`-spheres in `ℝⁿ`, one inside the region bounded by the other, cobound a closed
+  region homeomorphic to `Sⁿ⁻¹ × [0,1]`. The input is two spheres; that the region between
+  them is a product is the whole content, and is false without local flatness. (The earlier
+  draft instead assumed an embedded annulus and concluded an annulus, which is circular.)
 
 ```lean
--- def IsLocallyFlat (f : N → M) : Prop := IsEmbedding f ∧ ∀ x, ∃ chart …, sliceAt chart (f x)
+-- def IsLocallyFlat (f : N → M) : Prop := IsEmbedding f ∧ ∀ x, ∃ chart …, IsSlice chart (f x)
+-- theorem IsLocallyFlat.restrict … ; theorem IsLocallyFlat.comp_homeomorph … ; theorem IsLocallyFlat.prod …
 -- theorem isLocallyFlat_of_smoothEmbedding … : IsLocallyFlat f
--- theorem annulus_conjecture … : -- two parallel locally flat spheres cobound a product
+-- theorem bicollared_of_locallyFlat_sphere … :  -- Brown: a locally flat Sⁿ⁻¹ ⊆ Sⁿ is bicollared
+-- theorem annulus_conjecture (Σ₁ Σ₂ : LocallyFlatSphere (n-1) (ℝ^n)) (h : Σ₂ ⊆ inside Σ₁) :
+--     regionBetween Σ₁ Σ₂ ≃ₜ (sphere (n-1) ×ₜ I)
 ```
 
-**Design notes.** Codimension matters: local flatness is automatic in high codimension but
-substantive in codimension 1 and 2, so do not bake a codimension assumption into the
-definition. The companion notion, a **locally flat submanifold with a normal bundle**
-(topological tubular neighbourhood), is the topological analogue of layer 1's tubular
-neighbourhoods and is what layer 5's topological surgery would consume; flag it as a
-dependency rather than building it here.
+**Design notes.** Do not bake a codimension into `IsLocallyFlat`: codimension 0 (open
+embeddings, trivially flat), codimension 1 (collaring), and codimension 2 (where knotting
+lives) behave differently, and isolating them in one predicate is the point. The Annulus
+Conjecture reduces to the Stable Homeomorphism Conjecture (Kirby's route in dimension
+`≥ 5`); record that as the intended proof even though only the statement is the target. The
+companion notion, a locally flat submanifold with a topological normal bundle, is more
+delicate in positive codimension (Kirby–Siebenmann) and is what layer 5's topological
+surgery would consume; flag it as a dependency rather than building it here.
 
 **Unlocks.** The Annulus Conjecture (Kirby 1969 in dimension `≥ 5`; Quinn 1982 in
-dimension 4; no Kirby number): two parallel locally flat spheres cobound a product region.
+dimension 4; no Kirby number): two disjoint nested locally flat spheres cobound a product
+region.
 
 ### Layer 3: diffeomorphism groups with the C^∞ topology
 
@@ -824,6 +851,8 @@ print and cited without a link.
 - R. Daverman, G. Venema, *Embeddings in Manifolds*, AMS GSM 106 (2009): the general theory
   of locally flat (and wild) embeddings (a scanned copy is on the Ranicki archive,
   [webhomes.maths.ed.ac.uk/~v1ranick/papers/davenema.pdf](https://webhomes.maths.ed.ac.uk/~v1ranick/papers/davenema.pdf)).
+- M. Brown, *Locally flat imbeddings of topological manifolds*, Ann. of Math. 75 (1962)
+  331–341: the collaring theorem that the Annulus Conjecture rests on.
 - R. Kirby, *Stable homeomorphisms and the annulus conjecture*, Ann. of Math. 89 (1969)
   575–582 (dimension `≥ 5`); F. Quinn, *Ends of maps III: dimensions 4 and 5*, J.
   Differential Geom. 17 (1982) (dimension 4); M. Freedman, F. Quinn, *Topology of
