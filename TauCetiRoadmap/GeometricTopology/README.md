@@ -315,7 +315,8 @@ topological-manifold structure group `continuousGroupoid` (layer 1).
 **What to build.**
 - The predicate **`IsLocallyFlat f`** for a topological embedding `f : N → M` of
   topological manifolds, via "a slice chart exists at every image point", with the basic
-  closure properties (restriction, composition with homeomorphisms).
+  closure properties (restriction, composition with homeomorphisms). The general theory of
+  such embeddings is Daverman–Venema, *Embeddings in Manifolds* (GSM 106).
 - **Local flatness vs the smooth and PL cases**: a smooth or PL embedding is locally flat,
   stated against layer 1's structure groups, so the low-codimension subtleties are isolated
   in exactly one definition.
@@ -357,7 +358,8 @@ topological-group and uniform-space API from Mathlib's algebra-and-topology libr
 - The **group** `Diff(M) := M ≃ₘ^∞⟮I, I⟯ M` under composition (the `Group` instance is
   routine from the existing `Diffeomorph` composition and inverse).
 - The **C^∞ topology** on `Diff(M)`, for `M` compact as the first case (uniform convergence
-  of all derivatives in charts), making it a topological group, and the same topology on
+  of all derivatives in charts; the function-space topologies are Hirsch, *Differential
+  Topology* GTM 33, Chapter 2), making it a topological group, and the same topology on
   `Diff(M, ∂M)` (diffeomorphisms fixing the boundary) for the relative statements.
 - The **smooth-families correspondence**: a smooth map `P × M → M` that is a
   diffeomorphism in the `M` variable for each `p` is the same as a continuous map
@@ -402,7 +404,8 @@ from Hannah Fechtner's braid program) for braid groups; smooth embeddings
 manifolds for complements (handed on to layer 5).
 
 **What to build.**
-- **The presentations, as first-class types.** Smooth and PL embeddings `S¹ ↪ S³` (or
+- **The presentations, as first-class types** (Lickorish, *An Introduction to Knot Theory*,
+  GTM 175, is the spine throughout this layer). Smooth and PL embeddings `S¹ ↪ S³` (or
   `ℝ³`); PL polylines; braid closures (over `PresentedMonoid` braid groups with the
   Artin relations); knot diagrams as 4-valent planar graphs with crossing signs, and the
   equivalent oriented PD codes and Gauss codes. Each is a `Type`, with the forgetful and
@@ -467,7 +470,8 @@ calculus.
 **What to build.**
 - **The complement** of a knot or link as a compact manifold-with-boundary: delete an open
   tubular neighbourhood (layer 1), with the boundary a torus per component. This is the
-  layer-4-to-layer-5 handoff that lean-eval lacks.
+  layer-4-to-layer-5 handoff that lean-eval lacks. (Rolfsen, *Knots and Links*, Chapter 9,
+  is the reference for the surgery picture throughout this layer.)
 - **Slopes**: isotopy classes of essential simple closed curves on the boundary torus,
   equivalently primitive classes in `H₁(∂)`, parametrized as `p/q ∈ ℚ ∪ {∞}` once a
   meridian-longitude framing is fixed.
@@ -514,7 +518,8 @@ Seifert matrix.
 **What to build.**
 - The **concordance relation** and the **concordance group** `C` (smooth and topological
   variants), with connected sum as the group operation and the reverse mirror as inverse;
-  the slice knots as the identity coset.
+  the slice knots as the identity coset. (Livingston, *A survey of classical knot
+  concordance*, is the orienting reference.)
 - The **4D cobordism category** in general dimension: oriented cobordisms between manifolds,
   composition by gluing (layer 1), and knot/link cobordisms as surfaces in `S³ × [0,1]`,
   with genus giving the concordance and slice genera.
@@ -563,7 +568,10 @@ groups.
   assembled with a partition of unity), and its invariance under isometries; the total
   **volume** of a closed Riemannian manifold as a real number.
 - **Curvature**: the Levi-Civita connection, the Riemann curvature tensor, and sectional
-  and Ricci curvature, enough to *state* "constant sectional curvature `κ`".
+  and Ricci curvature, enough to *state* "constant sectional curvature `κ`" (Lee,
+  *Introduction to Riemannian Manifolds*, GTM 176, for the volume form and curvature;
+  Thurston, *Three-Dimensional Geometry and Topology*, and Ratcliffe, *Foundations of
+  Hyperbolic Manifolds*, GTM 149, for the hyperbolic side and Mostow rigidity).
 - **Hyperbolic structures**: the model `ℍⁿ`, complete constant-curvature `−1` metrics, and
   `IsHyperbolic M` (`M` carries a complete hyperbolic metric); hyperbolic volume as the
   volume of that metric, well-defined by Mostow rigidity in dimension `≥ 3` (the
@@ -606,8 +614,9 @@ isometry groups; layer 5's torus complements and gluing; layer 1's manifolds; Li
 **What to build.**
 - The **eight model geometries** as homogeneous Riemannian 3-manifolds `(X, Isom X)`:
   `S³`, `E³`, `ℍ³`, `S² × ℝ`, `ℍ² × ℝ`, `SL₂~`, `Nil`, `Sol`, each with its maximal
-  isometry group; a **geometric structure** on `M` as a complete locally homogeneous metric
-  modeled on one of them (equivalently `M = X / Γ` for a discrete `Γ ≤ Isom X`).
+  isometry group (Scott, *The geometries of 3-manifolds*, is the canonical account); a
+  **geometric structure** on `M` as a complete locally homogeneous metric modeled on one of
+  them (equivalently `M = X / Γ` for a discrete `Γ ≤ Isom X`).
 - **Incompressible tori** and the **JSJ decomposition**: a minimal collection of disjoint
   incompressible tori cutting `M` into Seifert-fibered and atoroidal pieces, with existence
   and uniqueness (the decomposition is canonical).
@@ -648,7 +657,8 @@ surface (closed orientable 2-manifold) classification for the splitting surface.
 **What to build.**
 - **Handlebodies** of each genus and the **Heegaard splitting** of a closed 3-manifold as
   a decomposition `M = H₁ ∪_φ H₂` along a genus-`g` surface, with `φ` a surface
-  diffeomorphism (consume layer 3's surface mapping classes).
+  diffeomorphism (consume layer 3's surface mapping classes; Scharlemann, *Heegaard
+  splittings of compact 3-manifolds*, is the survey).
 - **Heegaard genus** `g(M)` as the minimum genus over all splittings, with existence (every
   closed 3-manifold has a splitting, from a triangulation or a Morse function) so the
   minimum is over a nonempty set.
@@ -684,6 +694,8 @@ Euler class; vector bundles and their (to-be-built) Euler class; layer 1's manif
 - A **foliation** of `M` as an integrable subbundle of `TM` (a distribution closed under
   Lie bracket), equivalently a maximal atlas of flat charts; **leaves** as the maximal
   integral submanifolds; **taut** foliations (a closed transversal through every leaf).
+  Calegari, *Foliations and the Geometry of 3-Manifolds* (freely available online), is the
+  reference.
 - The **Euler class** of an oriented plane bundle in `H²(M; ℤ)` (a small standalone
   addition to Mathlib's bundle theory), specialized to the tangent field of a
   codimension-one foliation.
@@ -729,7 +741,8 @@ groupoid.
   geometric `SimplicialComplex.space` otherwise.
 - **Triangulation of a space** in the general sense: `IsTriangulable M := ∃ K, Nonempty (|K| ≃ₜ M)`.
   This is the notion in Manolescu's theorem, and it is *weaker* than asking for a
-  combinatorial or PL structure.
+  combinatorial or PL structure. (Moise, *Geometric Topology in Dimensions 2 and 3*, treats
+  the dimension-3 existence.)
 - **Combinatorial manifolds via the link condition** (Kim's point, the simplicial side of
   PL topology). Define, recursively in dimension, a **combinatorial `n`-sphere** and
   **combinatorial `n`-ball** (a complex PL-homeomorphic, after subdivision, to the boundary
@@ -804,60 +817,129 @@ Concrete checks that rule out vacuous or mis-stated definitions:
 
 ## References
 
+The problem list, then the standard text and the resolving paper for each layer, with
+section or theorem numbers where a contributor would actually look. The recent resolving
+papers were checked against the literature when this roadmap was written; the textbook
+references are at chapter or section granularity rather than edition-specific page numbers.
+
 - R. Kirby (ed.), *Problems in Low-Dimensional Topology*, in *Geometric Topology*
   (AMS/IP Stud. Adv. Math. 2.2, 1997): the source problem list `[Kir97]`.
-- W. B. R. Lickorish, *An Introduction to Knot Theory*, Springer GTM 175 (1997); G. Burde,
-  H. Zieschang, *Knots*, de Gruyter (2003): the knot-theory foundations of layer 4
-  (presentations, Reidemeister and Markov theorems, Seifert surfaces, the polynomials).
-- C. Rourke, B. Sanderson, *Introduction to Piecewise-Linear Topology*, Springer (1972):
-  the PL and combinatorial-manifold foundations shared by layers 1 and 11 (PL maps and
-  polyhedra in Chapters 1–2, the link condition and regular neighbourhoods in Chapter 3,
-  collapse).
-- M. Hirsch, *Differential Topology*, Springer GTM 33 (1976): the layer-1 smooth-gluing
-  toolkit, with precise statements: collars (§4.6), tubular neighbourhoods (§4.5), and the
-  disc theorem behind well-defined connected sum (§8.3, Theorem 8.3.1). J. Lee,
-  *Introduction to Smooth Manifolds*, Springer GTM 218, 2nd ed. (2013) is the same material
-  at a gentler pace (collars, Theorem 9.25; tubular neighbourhoods, Theorem 6.24).
+
+*Layer 1 (manifold buildout, gluing, structure groups).*
+- M. Hirsch, *Differential Topology*, Springer GTM 33 (1976): the smooth-gluing toolkit,
+  with precise statements: collars (§4.6), tubular neighbourhoods (§4.5), the disc theorem
+  behind well-defined connected sum (§8.3, Theorem 8.3.1), and the function-space topologies
+  used in layer 3 (Chapter 2). J. Lee, *Introduction to Smooth Manifolds*, Springer GTM 218,
+  2nd ed. (2013), the same material at a gentler pace (collars, Theorem 9.25; tubular
+  neighbourhoods, Theorem 6.24).
 - R. Palais, *Extending diffeomorphisms*, Proc. Amer. Math. Soc. 11 (1960) 274–277: the
-  isotopy uniqueness of ball embeddings, used for connected-sum well-definedness (layer 1).
+  isotopy uniqueness of ball embeddings, used for connected-sum well-definedness.
+- C. Rourke, B. Sanderson, *Introduction to Piecewise-Linear Topology*, Springer (1972):
+  the PL foundations shared with layer 11 (PL maps and polyhedra, Chapters 1–2; the link
+  condition, regular neighbourhoods, and collapse, Chapter 3); J. Hudson, *Piecewise Linear
+  Topology*, Benjamin (1969).
 - J. H. C. Whitehead, *On C¹-complexes*, Ann. of Math. 41 (1940) 809–824, and J. Munkres,
   *Elementary Differential Topology* (Annals of Math. Studies 54, 1966): the smooth-implies-PL
-  half of the layer-1 smoothing comparison.
-- R. Kirby, L. Siebenmann, *Foundational Essays on Topological Manifolds, Smoothings, and
-  Triangulations* (Annals of Math. Studies 88, 1977), Essays IV–V: the Top-to-PL obstruction
-  and the failure of the Hauptvermutung, the far-horizon part of the layer-1 comparison.
-- G. Perelman, *The entropy formula for the Ricci flow and its geometric applications*,
-  [arXiv:math/0211159](https://arxiv.org/abs/math/0211159); *Ricci flow with surgery on
-  three-manifolds*, [arXiv:math/0303109](https://arxiv.org/abs/math/0303109);
-  *Finite extinction time...*, [arXiv:math/0307245](https://arxiv.org/abs/math/0307245):
-  Geometrization (layer 8).
-- I. Agol, *The virtual Haken conjecture* (with an appendix by Agol, Groves, Manning),
-  Doc. Math. 18 (2013), [arXiv:1204.2810](https://arxiv.org/abs/1204.2810): layer 7.
-- D. Gabai, R. Meyerhoff, P. Milley, *Minimum volume cusped hyperbolic three-manifolds*,
-  J. Amer. Math. Soc. 22 (2009), and the closed-case companion work: the Weeks manifold as
-  the smallest-volume closed orientable hyperbolic 3-manifold (layer 7).
-- L. Piccirillo, *The Conway knot is not slice*, Ann. of Math. 191 (2020),
-  [arXiv:1808.02923](https://arxiv.org/abs/1808.02923): layer 4 (`[Kir97, 1.41]`).
-- M. Freedman, *The topology of four-dimensional manifolds*, J. Differential Geom. 17
-  (1982); M. Freedman, F. Quinn, *Topology of 4-Manifolds*, Princeton, 1990:
-  topological sliceness and Alexander-polynomial-one knots (layers 4 and 6).
+  half of the smoothing comparison. R. Kirby, L. Siebenmann, *Foundational Essays on
+  Topological Manifolds, Smoothings, and Triangulations* (Annals of Math. Studies 88, 1977),
+  Essays IV–V: the Top-to-PL obstruction and the failure of the Hauptvermutung.
+
+*Layer 2 (locally flat embeddings).*
+- R. Daverman, G. Venema, *Embeddings in Manifolds*, AMS GSM 106 (2009): the general theory
+  of locally flat (and wild) embeddings.
+- R. Kirby, *Stable homeomorphisms and the annulus conjecture*, Ann. of Math. 89 (1969)
+  575–582 (dimension `≥ 5`); F. Quinn, *Ends of maps III: dimensions 4 and 5*, J.
+  Differential Geom. 17 (1982) (dimension 4); M. Freedman, F. Quinn, *Topology of
+  4-Manifolds*, Princeton (1990), for dimension-4 local flatness.
+
+*Layer 3 (diffeomorphism groups).*
+- J. Cerf, *Sur les difféomorphismes de la sphère de dimension trois (Γ₄ = 0)*, Springer
+  LNM 53 (1968): `π₀ Diff(S³)`.
 - A. Hatcher, *A proof of the Smale conjecture, `Diff(S³) ≃ O(4)`*, Ann. of Math. 117
-  (1983): layer 3 (`[Kir97, 4.34]`).
-- T. Watanabe, *Some exotic nontrivial elements of the rational homotopy groups of
-  `Diff(S⁴)`*, [arXiv:1812.02448](https://arxiv.org/abs/1812.02448): the disproof of the
-  4-dimensional Smale conjecture (layer 3, `[Kir97, 4.126]`).
+  (1983), `[Kir97, 4.34]`; T. Watanabe, *Some exotic nontrivial elements of the rational
+  homotopy groups of `Diff(S⁴)`*, [arXiv:1812.02448](https://arxiv.org/abs/1812.02448), the
+  4-dimensional disproof, `[Kir97, 4.126]`.
+
+*Layer 4 (knot theory).*
+- W. B. R. Lickorish, *An Introduction to Knot Theory*, Springer GTM 175 (1997): the
+  spine (Reidemeister, Chapter 1; the bracket and Jones polynomial, Chapters 3 and 5;
+  Seifert matrices and the Alexander polynomial, Chapter 6; concordance, Chapter 8; braids
+  and Markov's theorem, Chapters 10–11); G. Burde, H. Zieschang, *Knots*, de Gruyter (2003).
+- L. Kauffman, *State models and the Jones polynomial*, Topology 26 (1987) 395–407 (the
+  bracket); P. Freyd, D. Yetter, J. Hoste, W. Lickorish, K. Millett, A. Ocneanu, *A new
+  polynomial invariant of knots and links*, Bull. AMS 12 (1985) 239–246 (HOMFLY).
+- L. Piccirillo, *The Conway knot is not slice*, Ann. of Math. 191 (2020),
+  [arXiv:1808.02923](https://arxiv.org/abs/1808.02923), `[Kir97, 1.41]`; M. Freedman, *The
+  topology of four-dimensional manifolds*, J. Differential Geom. 17 (1982), and
+  Freedman–Quinn (above), for topological sliceness, `[Kir97, 1.36]`.
+
+*Layer 5 (Dehn surgery).*
+- D. Rolfsen, *Knots and Links*, Publish or Perish (1976), Chapter 9 (surgery and the
+  surgery-description calculus); R. Gompf, A. Stipsicz, *4-Manifolds and Kirby Calculus*,
+  AMS GSM 20 (1999).
+- P. Kronheimer, T. Mrowka, *Witten's conjecture and Property P*, Geom. Topol. 8 (2004)
+  295–310, [arXiv:math/0311489](https://arxiv.org/abs/math/0311489), `[Kir97, 1.15]`; D.
+  Gabai, *Foliations and the topology of 3-manifolds III*, J. Differential Geom. 26 (1987)
+  479–536, for Property R, `[Kir97, 1.82]`.
+
+*Layer 6 (concordance and cobordism).*
+- C. Livingston, *A survey of classical knot concordance*,
+  [arXiv:math/0307077](https://arxiv.org/abs/math/0307077) (Handbook of Knot Theory, 2005):
+  the concordance group and the signature invariants (after Tristram 1969, Levine 1969).
+- The Conway and Kinoshita–Terasaka pair, mutants with different smooth concordance type via
+  Piccirillo (above), `[Kir97, 1.53]`; A. S. Levine, *Nonsurjective satellite operators and
+  piecewise-linear concordance*, Forum Math. Sigma 4 (2016) e34, a knot in a homology sphere
+  not smoothly concordant to any knot in `S³`, `[Kir97, 1.31]`.
+
+*Layer 7 (Riemannian volume, hyperbolic structures).*
+- J. Lee, *Introduction to Riemannian Manifolds*, Springer GTM 176, 2nd ed. (2018):
+  curvature and the Riemannian volume form; W. Thurston, *Three-Dimensional Geometry and
+  Topology, Vol. 1*, Princeton (1997), and J. Ratcliffe, *Foundations of Hyperbolic
+  Manifolds*, Springer GTM 149, for hyperbolic structures and Mostow rigidity (Mostow 1968,
+  Prasad 1973).
+- I. Agol, *The virtual Haken conjecture* (appendix with Groves and Manning), Doc. Math. 18
+  (2013), [arXiv:1204.2810](https://arxiv.org/abs/1204.2810), `[Kir97, 3.51]`; D. Gabai, R.
+  Meyerhoff, P. Milley, *Minimum volume cusped hyperbolic three-manifolds*, J. Amer. Math.
+  Soc. 22 (2009), [arXiv:0705.4325](https://arxiv.org/abs/0705.4325), with the closed case
+  (the Weeks manifold) in *Mom technology and hyperbolic 3-manifolds*,
+  [arXiv:0910.5043](https://arxiv.org/abs/0910.5043), `[Kir97, 3.60]`.
+
+*Layer 8 (geometric decomposition).*
+- P. Scott, *The geometries of 3-manifolds*, Bull. London Math. Soc. 15 (1983) 401–487: the
+  canonical account of the eight model geometries.
+- G. Perelman, [arXiv:math/0211159](https://arxiv.org/abs/math/0211159),
+  [arXiv:math/0303109](https://arxiv.org/abs/math/0303109),
+  [arXiv:math/0307245](https://arxiv.org/abs/math/0307245); J. Morgan, G. Tian, *Ricci Flow
+  and the Poincaré Conjecture*, Clay Math. Monographs 3 (2007): Geometrization,
+  `[Kir97, 3.45]`.
+
+*Layer 9 (Heegaard genus).*
+- M. Scharlemann, *Heegaard splittings of compact 3-manifolds*,
+  [arXiv:math/0007144](https://arxiv.org/abs/math/0007144) (Handbook of Geometric Topology,
+  2002).
+- T. Li, *Rank and genus of 3-manifolds*, J. Amer. Math. Soc. 26 (2013) 777–829,
+  [arXiv:1106.6302](https://arxiv.org/abs/1106.6302): the disproof of Waldhausen's
+  rank-versus-genus conjecture.
+
+*Layer 10 (foliations and the Euler class).*
+- D. Calegari, *Foliations and the Geometry of 3-Manifolds*, Oxford (2007), freely available
+  online; A. Candel, L. Conlon, *Foliations I–II*, AMS GSM 23 and 60; W. Thurston, *A norm
+  for the homology of 3-manifolds*, Mem. Amer. Math. Soc. 59 (1986).
+- D. Gabai, M. Yazdi, *On Thurston's Euler class-one conjecture*, Acta Math. 225 (2020),
+  [arXiv:1603.03822](https://arxiv.org/abs/1603.03822): the disproof.
+
+*Layer 11 (triangulations, PL structures, collapse).*
+- E. Moise, *Geometric Topology in Dimensions 2 and 3*, Springer GTM 47 (1977): triangulation
+  in dimension 3; Rourke–Sanderson Chapter 3 (collapse) and Kirby–Siebenmann (both above).
 - C. Manolescu, *Pin(2)-equivariant Seiberg–Witten Floer homology and the triangulation
   conjecture*, J. Amer. Math. Soc. 29 (2016),
-  [arXiv:1303.2354](https://arxiv.org/abs/1303.2354): layer 11.
-- T. Li, *Rank and genus of 3-manifolds*, J. Amer. Math. Soc. 26 (2013): the disproof of
-  Waldhausen's rank-versus-genus conjecture (layer 9).
-- F. Quinn, *Ends of maps III: dimensions 4 and 5*, J. Differential Geom. 17 (1982): the
-  Annulus Conjecture in dimension 4 (layer 2); Kirby (1969) for dimension `≥ 5`.
+  [arXiv:1303.2354](https://arxiv.org/abs/1303.2354), with the survey *Lectures on the
+  triangulation conjecture*, [arXiv:1607.08163](https://arxiv.org/abs/1607.08163); E. C.
+  Zeeman, *On the dunce hat*, Topology 2 (1964) 341–358, `[Kir97, 5.2]`.
 
-The author/title/venue citations above are deliberately conservative; a contributor
-expanding a layer should attach the precise reference for each theorem they state (and the
-relevant Kirby-list successor entry where one exists), rather than relying on the summary
-here.
+A contributor expanding a layer should still attach the precise theorem reference for each
+statement they make (and the relevant Kirby-list successor entry where one exists); the
+list above is the entry point, not a substitute.
 
 ## How to drive it
 
