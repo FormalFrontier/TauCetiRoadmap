@@ -1,28 +1,29 @@
 # Roadmap: exchangeability and de Finetti
 
-This roadmap adds **de Finetti's theorem about exchangeable sequences** to Tau Ceti, along
-with the prerequisites it rests on: finite-dimensional exchangeability, contractability,
-conditionally i.i.d. sequences, tail σ-algebras for processes, reverse-martingale
-convergence along decreasing filtrations, the Koopman mean-ergodic bridge, and the
-de Finetti–Ryll-Nardzewski equivalence. It builds on Mathlib's substantial probability and
-analysis stack, which provides finite and product measures, kernels, `Measure.bind`,
-conditional expectation, filtrations and martingales, `Lp` spaces, Hilbert-space
-projections, measure-preserving maps, and the mean ergodic theorem, but none of the
-exchangeability theory on top.
+Exchangeability is the first large probability-symmetry theory missing from Mathlib:
+finite-dimensional laws invariant under permutations, spreadability/contractability, tail
+σ-algebras for processes, random directing measures, and the conditional-product
+representation of invariant laws. Mathlib supplies the ambient stack this rests on: finite
+and product measures, kernels, `Measure.bind`, conditional expectation, filtrations and
+martingales, `Lp` spaces, Hilbert-space projections, measure-preserving maps, and the mean
+ergodic theorem. It does not, however, carry the exchangeability theory on top.
 
-The source project
-[`cameronfreer/exchangeability`](https://github.com/cameronfreer/exchangeability)
-formalizes Kallenberg's Theorem 1.1 (in *Probabilistic Symmetries and Invariance
-Principles*) for infinite sequences on standard Borel spaces,
+The first summit is the de Finetti–Ryll-Nardzewski theorem for sequences on a standard
+Borel space:
 
 ```text
 contractable ↔ exchangeable ↔ conditionally i.i.d.
 ```
 
-and carries three complete proof routes: reverse martingales, L² contractability bounds,
-and Koopman / mean ergodic theory. We migrate the mathematics in layers, separating
-general-purpose probability infrastructure from the final exchangeability-specific
-theorem.
+It has three classical proof routes: reverse martingales, L² contractability bounds, and
+Koopman / mean ergodic theory. This roadmap builds the reusable probability-symmetry
+library those routes need, in dependency order, with de Finetti as its first summit theorem.
+
+A completed Lean formalization exists in
+[`cameronfreer/exchangeability`](https://github.com/cameronfreer/exchangeability); it is a
+migration source and API-warning map (see [Migration source](#migration-source)), not the
+specification. The specification here is Kallenberg's theorem and the reusable library
+needed to state and prove it.
 
 Suggested homes:
 
@@ -34,55 +35,6 @@ TauCeti/Probability/Martingale/
 TauCeti/Probability/Ergodic/
 TauCeti/MeasureTheory/Measure/
 ```
-
-Migration sources, pinned at
-[`e0532e59ceff23edab44dda9ab0655debbc9cc22`](https://github.com/cameronfreer/exchangeability/tree/e0532e59ceff23edab44dda9ab0655debbc9cc22):
-
-The map below tracks the primary Lean sources. Source README, work-plan, and note files are
-background only.
-
-* Layer 0: `Exchangeability/Core.lean`, `Exchangeability/Contractability.lean`,
-  `Exchangeability/ConditionallyIID.lean`, `Exchangeability/Util/StrictMono.lean`, and
-  `Exchangeability/Util/ProductBounds.lean`.
-* Layer 1: `Exchangeability/Probability/MeasureKernels.lean`,
-  `Exchangeability/Probability/InfiniteProduct.lean`,
-  `Exchangeability/Probability/CondIndep.lean`, the
-  `Exchangeability/Probability/CondIndep/` subtree, and
-  `Exchangeability/DeFinetti/CommonEnding.lean`.
-* Layer 2: `Exchangeability/Tail/*.lean`, `Exchangeability/PathSpace/*.lean`, and
-  `Exchangeability/Probability/SigmaAlgebraHelpers.lean`.
-* Layer 3: `Exchangeability/DeFinetti/ViaL2.lean`,
-  `Exchangeability/DeFinetti/ViaL2/*.lean`, `Exchangeability/DeFinetti/L2Helpers.lean`,
-  `Exchangeability/DeFinetti/TheoremViaL2.lean`,
-  `Exchangeability/Bridge/CesaroToCondExp.lean`,
-  `Exchangeability/Probability/CenteredVariables.lean`,
-  `Exchangeability/Probability/IntegrationHelpers.lean`, and
-  `Exchangeability/Probability/LpNormHelpers.lean`.
-* Layer 4: `Exchangeability/Probability/Martingale.lean`,
-  `Exchangeability/Probability/Martingale/Reverse.lean`,
-  `Exchangeability/Probability/Martingale/Convergence.lean`,
-  `Exchangeability/Probability/Martingale/Crossings/*.lean`, and
-  `Exchangeability/Probability/TimeReversalCrossing.lean`. These source crossing and
-  convergence files are the reverse-direction delta; consume Mathlib for the forward
-  upcrossing and convergence API per the build plan below.
-* Layer 5: `Exchangeability/Ergodic/*.lean` and
-  `Exchangeability/DeFinetti/ViaKoopman.lean`,
-  `Exchangeability/DeFinetti/ViaKoopman/*.lean`, and
-  `Exchangeability/DeFinetti/TheoremViaKoopman.lean`.
-* Layer 6: `Exchangeability/DeFinetti/ViaMartingale.lean`,
-  `Exchangeability/DeFinetti/ViaMartingale/*.lean`,
-  `Exchangeability/DeFinetti/MartingaleHelpers.lean`, and
-  `Exchangeability/DeFinetti/TheoremViaMartingale.lean`.
-* Layer 7: `Exchangeability/DeFinetti/BridgeProperty.lean`,
-  `Exchangeability/DeFinetti/Theorem.lean`, `Exchangeability/DeFinetti.lean`, and top-level
-  `Exchangeability.lean`.
-* Cross-layer helpers: `Exchangeability/Probability/CondExp.lean`,
-  `Exchangeability/Probability/TripleLawDropInfo.lean`, and the
-  `Exchangeability/Probability/TripleLawDropInfo/` subtree. Pull these into whichever Tau
-  Ceti layer first needs the corresponding general-purpose facts.
-
-Credit `cameronfreer/exchangeability` in each ported or adapted file, and record when a
-Tau Ceti file intentionally diverges from this source API.
 
 ## The end goal (v1)
 
@@ -115,15 +67,36 @@ with `α` a standard Borel space, prove the de Finetti–Ryll-Nardzewski equival
 ```
 
 The standard-Borel hypothesis is on the value space `α`, where the directing measure and
-the conditional distributions live; the sample space `Ω` needs only a measurable structure
-here. If the martingale proof routes the directing measure through `condExpKernel` (or
-through `condDistrib` specialized to an identity-valued kernel with value space `Ω`), it
-may temporarily also require `[StandardBorelSpace Ω]`, which is a constraint of that route
-rather than of the statement.
+the conditional distributions live; the public statement keeps `Ω` with only a measurable
+structure. Build the tail-conditional path law via `condDistrib` on `ℕ → α` (standard Borel
+because `α` is), which needs standard Borel only on its codomain; the directing measure is
+the one-coordinate conditional law extracted from that conditional path law, with the product
+factorization proved separately. An extra `[StandardBorelSpace Ω]` would arise only from
+`condExpKernel` (or `condDistrib` specialized to an identity-valued kernel with value space
+`Ω`); such a hypothesis is internal to that route and does not appear in the public
+statement.
 
 The default public theorem should eventually use the reverse-martingale proof. The L²
 route remains as a lighter real-valued theorem, and the Koopman route remains as the
 ergodic-theory route with reusable operator-theoretic infrastructure.
+
+## The library spine
+
+The deliverable is a reusable probability-symmetry library, not just a proof script for one
+theorem. The de Finetti–Ryll-Nardzewski theorem is the summit of this spine, not its only
+output. The spine is:
+
+1. sequence laws and finite-dimensional marginals;
+2. exchangeability, full exchangeability, spreadability/contractability, and the bridges
+   between the process-level and path-law formulations;
+3. product kernels and mixtures of finite product measures;
+4. conditional independence and conditionally i.i.d. APIs;
+5. process-relative tail σ-algebras and path-space shifts;
+6. reverse martingales for arbitrary decreasing filtrations;
+7. Koopman operators and invariant σ-algebras for arbitrary measure-preserving maps.
+
+Each item is worth building for its own sake, so that a later probability-symmetry roadmap
+(exchangeable arrays, Markov exchangeability, ergodic decomposition) can consume it directly.
 
 ## Standing hypotheses
 
@@ -192,6 +165,62 @@ State the general infrastructure at full generality: reverse martingales for arb
 decreasing filtrations, and Koopman machinery for arbitrary measure-preserving
 transformations, before specializing to path-space shifts.
 
+## Migration source
+
+A completed Lean formalization of this theory exists at
+[`cameronfreer/exchangeability`](https://github.com/cameronfreer/exchangeability), pinned at
+[`e0532e59ceff23edab44dda9ab0655debbc9cc22`](https://github.com/cameronfreer/exchangeability/tree/e0532e59ceff23edab44dda9ab0655debbc9cc22).
+Use it as a source of sorry-free proof scripts to migrate or adapt, a declaration map for
+the three proof routes, an API-warning source (where a local definition was convenient but
+should be generalized for Tau Ceti), and an attribution source for ported files. It is
+**not** the mathematical specification: the specification is the standalone library above,
+with Kallenberg, Aldous, Hewitt–Savage, and Ryll-Nardzewski as references. The map below is
+"where to look", not "what is correct"; judge each milestone on its own terms. Source
+README, work-plan, and note files are background only.
+
+* Layer 0: `Exchangeability/Core.lean`, `Exchangeability/Contractability.lean`,
+  `Exchangeability/ConditionallyIID.lean`, `Exchangeability/Util/StrictMono.lean`, and
+  `Exchangeability/Util/ProductBounds.lean`.
+* Layer 1: `Exchangeability/Probability/MeasureKernels.lean`,
+  `Exchangeability/Probability/InfiniteProduct.lean`,
+  `Exchangeability/Probability/CondIndep.lean`, the
+  `Exchangeability/Probability/CondIndep/` subtree, and
+  `Exchangeability/DeFinetti/CommonEnding.lean`.
+* Layer 2: `Exchangeability/Tail/*.lean`, `Exchangeability/PathSpace/*.lean`, and
+  `Exchangeability/Probability/SigmaAlgebraHelpers.lean`.
+* Layer 3: `Exchangeability/DeFinetti/ViaL2.lean`,
+  `Exchangeability/DeFinetti/ViaL2/*.lean`, `Exchangeability/DeFinetti/L2Helpers.lean`,
+  `Exchangeability/DeFinetti/TheoremViaL2.lean`,
+  `Exchangeability/Bridge/CesaroToCondExp.lean`,
+  `Exchangeability/Probability/CenteredVariables.lean`,
+  `Exchangeability/Probability/IntegrationHelpers.lean`, and
+  `Exchangeability/Probability/LpNormHelpers.lean`.
+* Layer 4: `Exchangeability/Probability/Martingale.lean`,
+  `Exchangeability/Probability/Martingale/Reverse.lean`,
+  `Exchangeability/Probability/Martingale/Convergence.lean`,
+  `Exchangeability/Probability/Martingale/Crossings/*.lean`, and
+  `Exchangeability/Probability/TimeReversalCrossing.lean`. These source crossing and
+  convergence files are the reverse-direction delta; consume Mathlib for the forward
+  upcrossing and convergence API per the build plan below.
+* Layer 5: `Exchangeability/Ergodic/*.lean` and
+  `Exchangeability/DeFinetti/ViaKoopman.lean`,
+  `Exchangeability/DeFinetti/ViaKoopman/*.lean`, and
+  `Exchangeability/DeFinetti/TheoremViaKoopman.lean`.
+* Layer 6: `Exchangeability/DeFinetti/ViaMartingale.lean`,
+  `Exchangeability/DeFinetti/ViaMartingale/*.lean`,
+  `Exchangeability/DeFinetti/MartingaleHelpers.lean`, and
+  `Exchangeability/DeFinetti/TheoremViaMartingale.lean`.
+* Layer 7: `Exchangeability/DeFinetti/BridgeProperty.lean`,
+  `Exchangeability/DeFinetti/Theorem.lean`, `Exchangeability/DeFinetti.lean`, and top-level
+  `Exchangeability.lean`.
+* Cross-layer helpers: `Exchangeability/Probability/CondExp.lean`,
+  `Exchangeability/Probability/TripleLawDropInfo.lean`, and the
+  `Exchangeability/Probability/TripleLawDropInfo/` subtree. Pull these into whichever Tau
+  Ceti layer first needs the corresponding general-purpose facts.
+
+Credit `cameronfreer/exchangeability` in each ported or adapted file, and record when a
+Tau Ceti file intentionally diverges from this source API.
+
 ---
 
 ## The build, in layers
@@ -199,7 +228,7 @@ transformations, before specializing to path-space shifts.
 The ordering below is the dependency order. As each layer makes the next layer's *types*
 expressible in `TauCeti/`, state its milestones in `Targets.lean` with `sorry`.
 
-### Layer 0: core exchangeability and finite marginals
+### Layer 0: sequence laws, finite marginals, and symmetry notions
 
 Suggested home:
 
@@ -221,6 +250,10 @@ Build:
 * finite approximation of infinite permutations;
 * extension of strictly monotone finite selections to finite permutations.
 
+`Contractable` (invariance under strictly increasing finite subsequences) is the first
+formal target for this spreadability notion; `Spreadable` is the standard synonym, mentioned
+for orientation. The roadmap commits to the single `Contractable` API, not two parallel ones.
+
 Key milestones:
 
 ```lean
@@ -239,7 +272,7 @@ only, or as a property of a process only, without bridges. Both viewpoints are u
 the process-level statements are what users want, while the path-law statements make
 π-system and shift arguments cleaner.
 
-### Layer 1: product kernels and the common ending
+### Layer 1: product kernels, conditional independence, and mixtures
 
 Suggested home:
 
@@ -270,7 +303,7 @@ injective selection `k : Fin m → ℕ` and measurable rectangle `B`, the law of
 This layer is shared by the L² and Koopman routes, and also useful for the martingale
 route's final finite-product step.
 
-### Layer 2: tail σ-algebras and path-space shift
+### Layer 2: process tails and path-space dynamics
 
 Suggested home:
 
@@ -315,7 +348,7 @@ shift-invariant σ-algebra. For one-sided sequences, the relationship runs throu
 invariance, almost invariance, and completions. State exactly the theorem each proof
 route needs.
 
-### Layer 3: the L² contractability proof
+### Layer 3: L² averaging library and real-valued de Finetti
 
 Suggested home:
 
@@ -355,7 +388,7 @@ deFinetti_RyllNardzewski_equivalence_viaL2
 The final route should make clear that it proves a real-valued L² theorem, not the full
 standard-Borel theorem.
 
-### Layer 4: reverse martingales and Lévy downward theorem
+### Layer 4: reverse martingales and conditional-expectation limits
 
 Suggested home:
 
@@ -420,9 +453,11 @@ theorem condExp_tendsto_iInf
 ```
 
 This theorem should be independent of exchangeability and later consumed by the martingale
-proof.
+proof. The L¹ and Lᵖ convergence forms (for `f ∈ L¹` / `Lᵖ`, using Mathlib's
+uniform-integrability and eLp-norm conditional-expectation tools) are follow-up Layer 4
+targets; the L¹ form is what most uses want.
 
-### Layer 5: Koopman and mean ergodic machinery
+### Layer 5: Koopman operators and invariant σ-algebras
 
 Suggested home:
 
@@ -471,7 +506,7 @@ the probabilistic statement still needs that projection identified with conditio
 expectation onto the invariant σ-algebra. That identification is a separate theorem, not a
 simp step.
 
-### Layer 6: the martingale proof of de Finetti
+### Layer 6: directing measures and de Finetti representation
 
 Suggested home:
 
@@ -549,20 +584,38 @@ After v1:
 * ergodic decomposition of exchangeable laws;
 * Mathlib extraction of general infrastructure.
 
+Optional extensions of the core theory, valuable but not part of v1:
+
+* the empirical-measure and mixture forms of de Finetti (the law-of-large-numbers form
+  `(1/n) Σ_{i<n} δ_{Xᵢ} ⇒ ν` in `P(α)`, and `pathLaw X = ∫ p^{⊗ℕ} dπ(p)` with `π` unique on
+  `P(α)`);
+* the Hewitt–Savage zero-one law (triviality of the symmetric σ-algebra for i.i.d.
+  sequences) and the extreme-point / ergodic-decomposition corollary;
+* the full Koopman Markov-operator API (positive, unital, multiplicative on `L^∞`);
+* the detailed directing-measure API: a.e. uniqueness, measurability with respect to the
+  tail/exchangeable σ-algebra, and the conditional-factorization identity
+  `E[∏_j f_j(X_{i_j}) | σ(ν)] = ∏_j ∫ f_j dν`;
+* a boundary worked example marking the limits of the theory: a stationary-not-exchangeable
+  two-state Markov chain (`P(0→0) = P(1→1) = q`, `0 < q < 1`, `q ≠ ½`).
+
 These are not prerequisites for the v1 theorem.
 
 ## Worked examples
 
-Discharge these alongside the layers; they are checks against vacuous definitions.
+Discharge these alongside the layers; they check that the API describes real probability
+objects, not just the final theorem.
 
-* A conditionally i.i.d. sequence is exchangeable.
-* An exchangeable sequence is contractable.
-* Finite-dimensional marginals determine a probability measure on `ℕ → α`.
+* The law of an i.i.d. sequence is `ConditionallyIID`, `Exchangeable`, and `Contractable`.
+* A mixture of i.i.d. `Bool`-valued laws, parameterized by a random `θ`, is exchangeable,
+  with `ω ↦ κ (θ ω)` (`κ` a two-point kernel) as the directing measure. The directing
+  measure is the random probability measure induced by `θ`, not `θ` itself; phrasing it via
+  the two-point kernel keeps the example independent of a mature `Bernoulli` API.
+* Finite-dimensional prefix marginals determine a probability measure on `ℕ → α`.
+* Full exchangeability of a path law implies shift-preservation.
 * The tail-family of a process is antitone.
-* Lévy downward theorem for an eventually constant decreasing filtration.
-* Koopman projection equals conditional expectation for the trivial shift.
-* The L² theorem applies to a bounded real-valued exchangeable sequence.
-* The default `deFinetti` theorem applies to a standard-Borel exchangeable sequence.
+* The Lévy downward theorem specializes correctly to an eventually constant decreasing
+  filtration (a test of `condExp_tendsto_iInf`, not a de Finetti example).
+* In the real-valued L² lane, bounded observables give `MemLp 2` automatically.
 
 ## Ordering
 
@@ -591,7 +644,8 @@ and becomes the default public theorem.
 
 ## Acknowledgements
 
-This roadmap is based on Cameron Freer's `exchangeability` formalization. It also benefits
+This roadmap uses Cameron Freer's `exchangeability` formalization as its primary migration
+source. It also benefits
 from the anonymous reviewers of Cameron Freer, *Three Roads to de Finetti's Theorem in
 Lean* (short paper), whose feedback helped golf and simplify the library and make fuller
 use of Mathlib. Ported files should preserve source attribution and document any
