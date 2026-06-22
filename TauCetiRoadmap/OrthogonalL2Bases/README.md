@@ -17,27 +17,41 @@ This area builds that **L² Hilbert-basis layer** for orthogonal systems:
 - the **L²-product-basis** lemma (a Hilbert basis of `L²(μ ⊗ ν)` from bases of the factors).
 
 The **Hermite basis of `L²(ℝ)`** is the worked anchor (**Part A**, the v1 deliverable) from which the
-family-agnostic spine (**Part B**) is abstracted; the same spine then yields further classical
-bases (Laguerre, Jacobi; **Part C**, future) and the multidimensional Hermite basis.
+family-agnostic spine (**Part B**) is abstracted; the spine then yields the **multidimensional
+Hermite basis** (**Part C**, future — fully grounded as `B3 ∘ A`). Further classical families
+(Laguerre, Jacobi) are a *separate* future roadmap, since their orthogonality relations are not yet
+in Mathlib and so must be grounded as their own targets, not as inputs here.
 
 ### Scope boundary (what this area is, and is not)
 
 This area provides **Hilbert-space structure**: completeness, `HilbertBasis`, Parseval, product
-bases. It treats each family's **orthogonality relation** `∫ pₘ pₙ w = cₙδ` and the polynomial
-calculus (recurrences, generating functions, Rodrigues) as **inputs** — consumed from Mathlib's
-existing polynomial API where available, not re-derived here. The line is: an *integral identity*
-("these polynomials are orthogonal w.r.t. `w`") is an input; a *Hilbert-space theorem* ("...hence
-the normalized functions are a complete orthonormal basis of L²") is the contribution.
+bases. The split is by *kind of statement*, and **everything is grounded** — it either exists in
+Mathlib or is a target here (no dangling external dependencies):
+
+- The family's **orthogonality relation** `∫ pₘ pₙ w = cₙδ` is an existing Mathlib lemma where one
+  exists, and otherwise a **target of this roadmap**. For Hermite it is **A1**
+  (`integral_hermite_mul_hermite_mul_gaussian`, below): Mathlib has `Polynomial.hermite` and
+  `integral_gaussian`, but *not* the weighted orthogonality integral, so this roadmap proves it.
+- The family's **polynomial calculus** (recurrences, generating functions, Rodrigues) is taken from
+  Mathlib's `Polynomial.*` API where present; the Hermite-specific pieces Mathlib lacks (the
+  derivative identity, the generating function) are likewise **A1 targets**.
+- The general bridge **B2** takes the orthogonality relation as a *lemma hypothesis* — so it is
+  family-agnostic and grounded by construction (a parametrized theorem, not a dependency).
+
+The line is: an *integral identity* is consumed (as a Mathlib lemma or a roadmap target); a
+*Hilbert-space theorem* ("...hence the normalized functions are a complete orthonormal basis of
+L²") is this area's contribution.
 
 ## Generality bar (decide up front; do not silently specialize)
 
 - **The basis layer is family-agnostic and scalar-generic.** Bases are stated through the
   measure-generic `HilbertBasis ι 𝕜 (Lp 𝕜 2 μ)` API over `[RCLike 𝕜]` (the real pointwise
   functions cast via `algebraMap ℝ 𝕜`); do **not** duplicate the API for `ℝ` and `ℂ` separately.
-- **Orthogonality relations are inputs.** Part B's bridge takes the relation `∫ pₘ pₙ w = cₙδ`
-  (with `cₙ > 0`) and a polynomial-density/completeness hypothesis as **arguments**; it does not
-  fix a family. Per-family identities (recurrences, generating functions, Rodrigues) are out of
-  scope — built elsewhere and consumed.
+- **The bridge is parametrized by the orthogonality relation.** Part B's bridge (B2) takes the
+  relation `∫ pₘ pₙ w = cₙδ` (with `cₙ > 0`) and a polynomial-density/completeness hypothesis as
+  **arguments** — family-agnostic and grounded by construction. The Hermite instance supplies that
+  relation from **A1** (a target here); each family's polynomial identities are reused from
+  Mathlib where present, and otherwise are targets (Hermite's are A1).
 - **Weights are classical and determinate.** Gaussian `e^{-x²}` (Hermite); later `x^α e^{-x}` on
   `[0,∞)` (Laguerre) and `(1-x)^α(1+x)^β` on `[-1,1]` (Jacobi). The completeness route requires the
   weight's moment problem to be determinate — concretely, finite exponential moments (Gaussian-type
@@ -62,7 +76,8 @@ the normalized functions are a complete orthonormal basis of L²") is the contri
 ## What is missing (build here)
 
 The completeness toolkit, the relation→`HilbertBasis` bridge, the L²-product-basis lemma, and the
-per-family completeness+basis (Hermite now; Laguerre/Jacobi later).
+the Hermite completeness+basis (now), and the multidimensional Hermite basis (Part C). (Laguerre/Jacobi
+are a separate future roadmap.)
 
 ## Part A — The Hermite basis of `L²(ℝ)` (the v1 anchor)
 
@@ -147,24 +162,31 @@ change of variables when the family is defined on a rescaled argument:** the Her
 relation transported by `u = x√2` — *not* `w = e^{-x²/2}` read off A1 directly.
 
 ### B3 — L²-product basis
-A Hilbert basis of `L²(μ)` and one of `L²(ν)` give a Hilbert basis of `L²(μ ⊗ ν)` indexed by the
-product; iterated, a basis of `L²(Measure.pi μ)` indexed by `Π i, κ i`. (Mathlib has only the
+**Index-generic** (this resolves the `ℕ`-vs-product question): for Hilbert bases of `L²(μ)` and
+`L²(ν)` indexed by *arbitrary* types `ι₁, ι₂`, B3 produces a Hilbert basis of `L²(μ ⊗ ν)` indexed
+by `ι₁ × ι₂`; iterated over a finite family, a basis of `L²(Measure.pi μ)` indexed by `Π i, κ i`.
+The family bridges (B2) are indexed by `ℕ` (degree), and B3 **consumes** those as the `ι = ℕ` case —
+so the multidimensional basis is indexed by `Π i, ℕ` (multi-indices), and **B2 need not be
+generalized away from `ℕ`**: the lift to products lives entirely in B3. (Mathlib has only the
 finite-dim algebraic `OrthonormalBasis.tensorProduct`.) Not special-function-specific.
 
 **Acceptance.** B1 applied to the envelope `√w = e^{-x²/2}` (i.e. `g = f·e^{-x²/2}`, `f ∈ L²`); B2
 reproducing Part A's basis from the orthogonality relation; B3 giving an ON basis of
 `L²(volume.prod volume)` from two copies of a 1-D basis.
 
-## Part C — Further instances (future; consume B)
+## Part C — The multidimensional Hermite basis (future; consume B)
 
-*Not v1; recorded so Parts A/B are built generically enough to instantiate.*
+*Not v1; recorded so Parts A/B are built generically enough to instantiate. **Fully grounded** — it
+is `B3 ∘ A`, every ingredient a target above.*
 
-- **Multidimensional Hermite basis** of `L²(ℝᵈ)` — `Ψ_α(x) = ∏ᵢ ψ_{αᵢ}(xᵢ)` — as the immediate
-  B3 ∘ A instantiation.
-- **Laguerre basis** of `L²([0,∞), x^α e^{-x})` and **Jacobi basis** of `L²([-1,1], (1-x)^α(1+x)^β)`:
-  each is B2 applied to that family's orthogonality relation plus its completeness (B1, or
-  Weierstrass density on the compact Jacobi interval). **Only the completeness + basis** is in scope
-  here; the Laguerre/Jacobi polynomial identities are inputs.
+- **Multidimensional Hermite basis** of `L²(ℝᵈ)` — `Ψ_α(x) = ∏ᵢ ψ_{αᵢ}(xᵢ)`, `α : ι → ℕ` — as the
+  immediate `B3 ∘ A` instantiation: B3 applied to `ι` copies of the 1-D Hermite basis (A3), giving a
+  `HilbertBasis (ι → ℕ) 𝕜 (Lp 𝕜 2 (Measure.pi (fun _ => volume)))`.
+
+**Deliberately not in this roadmap:** Laguerre and Jacobi L² bases. The spine (B1–B3) is built so
+they instantiate later, but their weighted-orthogonality relations are *not* in Mathlib — so, to
+keep this roadmap grounded, they belong to a **dedicated future roadmap** that states those
+relations as its own targets, rather than appearing as dangling inputs here.
 
 ## Dependency ordering
 
