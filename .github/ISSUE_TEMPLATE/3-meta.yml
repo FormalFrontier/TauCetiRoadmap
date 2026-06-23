@@ -1,0 +1,30 @@
+name: Meta (repository operation)
+description: Raise a problem about how the TauCetiRoadmap repository operates — CI/workflows, the intentions bot, labels, process, etc.
+title: "[Meta]: "
+labels: ["meta"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For problems with the **operation** of this repository rather than the mathematics of a
+        roadmap: workflows/CI, the intentions (claim) bot, labels, templates, conventions, or
+        process.
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      options:
+        - Workflows / CI
+        - Intentions (claim) bot
+        - Labels / templates
+        - Process / conventions
+        - Other
+    validations:
+      required: false
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What's the problem, and what would good look like?
+    validations:
+      required: true

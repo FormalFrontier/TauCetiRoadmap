@@ -1,0 +1,42 @@
+name: Roadmap issue (problem with an existing roadmap)
+description: Report a problem with a roadmap's content — a wrong or unclear target, a missing prerequisite, a bad dependency, etc.
+title: "[Roadmap]: "
+labels: ["roadmap-feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For problems with the **content** of an existing roadmap. (To register that you want to
+        work on part of a roadmap, use the *Intention* template instead. For problems with how
+        the repository itself operates, use the *Meta* template.)
+  - type: dropdown
+    id: area
+    attributes:
+      label: Roadmap area
+      options:
+        - CombinatorialHeegaardFloer
+        - EffectiveBounds
+        - GeometricTopology
+        - HeegaardFloer
+        - JacobianChallenge
+        - Multiquadratic
+        - OneParameterSemigroups
+        - PDE
+        - ReductiveGroups
+        - UniversalCovers
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's the problem?
+      description: What's wrong, unclear, missing, or mis-stated? Point to the specific target/item where you can.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested change
+      description: How would you fix it? (Optional.)
+    validations:
+      required: false
