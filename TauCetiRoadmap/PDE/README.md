@@ -46,7 +46,7 @@ For a **bounded open `Ω ⊆ ℝⁿ`** and a **uniformly elliptic, divergence-fo
 --     ∃ α ∈ Set.Ioc (0:ℝ) 1, HolderOnWith C α u K
 ```
 
-## Standing hypotheses (spell them out; never bundle)
+## Standing hypotheses (spell them out)
 
 PDE theory is **example-driven and hypothesis-sensitive**: the same theorem is true in
 many incomparable forms, and the art is in tracking exactly which structure each proof
@@ -67,6 +67,13 @@ separate hypothesis:
   - *continuous / VMO* `aⁱʲ` gives **Calderón–Zygmund** `W^{2,p}` estimates (strong solutions).
   Keep these lanes distinct; do not state one result and silently assume the regularity of
   another.
+
+"Named and separate" describes the hypotheses a statement carries, not new vocabulary to
+define. Follow "Use Mathlib's vocabulary" in the top-level README: a coefficient bound is the
+inline hypothesis `∀ x ∈ Ω, ‖b x‖ ≤ β`, never a bespoke boundedness predicate, because Mathlib
+states such bounds inline and has `Bornology.IsBounded` when no constant is needed. Uniform
+ellipticity is the case that does earn a named definition: its two-sided bound
+`λ‖ξ‖² ≤ aⁱʲ ξᵢ ξⱼ ≤ Λ‖ξ‖²` has no Mathlib spelling, so define it once, with explicit `λ, Λ`.
 
 ## Getting the statements right
 
