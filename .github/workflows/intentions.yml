@@ -23,6 +23,8 @@ jobs:
       project-title: "Tau Ceti"
       default-ttl: "30d"
       max-ttl: "90d"
+      # Only intention issues belong on the board; keep roadmap-feedback / meta off it.
+      auto-add-labels: "intention"
       app-id: ${{ vars.CLAIM_BOT_APP_ID }}
     secrets:
       app-private-key: ${{ secrets.CLAIM_BOT_APP_PRIVATE_KEY }}
