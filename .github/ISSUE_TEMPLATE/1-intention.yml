@@ -45,14 +45,6 @@ body:
         - BCR semigroup–Bochner (existence + uniqueness)
     validations:
       required: true
-  - type: input
-    id: timeframe
-    attributes:
-      label: Intended timeframe
-      description: Roughly how long do you expect this to take? (Sets a credible expectation; pick a matching claim duration.)
-      placeholder: e.g. ~2 weeks
-    validations:
-      required: false
   - type: textarea
     id: notes
     attributes:
