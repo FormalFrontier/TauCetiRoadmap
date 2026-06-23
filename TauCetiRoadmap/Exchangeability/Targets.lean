@@ -9,17 +9,20 @@ worked examples, and the references are in `README.md`.
 This file holds the **Layer 0** target signatures: the core symmetry notions (sequence
 laws, finite and full exchangeability, contractability), the directing-measure object
 (`ConditionallyIID`, with `ν : Ω → ProbabilityMeasure α`), path-space data (`pathLaw`,
-`prefixProj`, `shift`), finite-dimensional marginal uniqueness, and the easy bridges among
-the symmetry classes; the implication lattice and the adjacent-transposition and
-strictly-increasing-map characterizations are described in `README.md`. These elaborate
+`prefixProj`, `shift`), finite-dimensional marginal uniqueness (an ℕ-prefix wrapper over
+Mathlib's `FiniteDimensionalLaws`), and the easy bridges among the symmetry classes; the
+implication lattice and the adjacent-transposition and strictly-increasing-map
+characterizations are described in `README.md`. These elaborate
 against the pinned Mathlib and are stated with `sorry` (allowed in this human-owned roadmap
 library).
 
 Layer 0 needs only Mathlib, not any not-yet-chosen Tau Ceti API. Later layers add their
 milestones here as their types become expressible:
 
-* Layer 1 (product kernels, conditional independence, mixtures): product-kernel
-  measurability and the common ending `conditional_iid_from_directing_measure`.
+* Layer 1 (product kernels, conditional independence, mixtures): consume Mathlib's
+  cylinder/π-system facts (`generateFrom_pi`, `generateFrom_squareCylinders`); build the
+  random product-kernel measurability and the common ending
+  `conditional_iid_from_directing_measure`.
 * Layer 2 (process tails and path-space dynamics): `tailFamily`, `tailProcess`, and the
   shift-invariant σ-algebra.
 * Layer 3 (L² averaging and the standard-Borel de Finetti route, with the real-valued L²
@@ -94,7 +97,10 @@ def ConditionallyIID (μ : Measure Ω) (X : ℕ → Ω → α) : Prop :=
         μ.bind (fun ω => (ProbabilityMeasure.pi (fun _ : Fin m => ν ω)).toMeasure)
 
 /-- **Layer 0, finite-marginal uniqueness.** Two finite measures on path space agreeing on
-every finite-dimensional prefix marginal are equal. -/
+every finite-dimensional prefix marginal are equal. This and the probability variant below
+are roadmap-local ℕ-prefix wrappers over Mathlib's general
+`ProbabilityTheory.map_eq_iff_forall_finset_map_restrict_eq`, not new measure theory; the
+`sorry` is the thin `Fin n`-prefix ↔ finite-subset adapter. -/
 example {μ ν : Measure (ℕ → α)} [IsFiniteMeasure μ] [IsFiniteMeasure ν]
     (h : ∀ (n : ℕ) (S : Set (Fin n → α)), MeasurableSet S →
       μ.map (prefixProj α n) S = ν.map (prefixProj α n) S) :

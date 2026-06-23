@@ -130,9 +130,14 @@ roadmap.
 ## What Mathlib already has (consume)
 
 * **Finite products and path laws:** `Measure.map`, finite product measurable spaces,
-  `Measure.pi`, and product-measure API.
-* **π-system uniqueness:** measure extension / uniqueness from a generating π-system,
-  used to prove that finite-dimensional marginals determine laws on sequence space.
+  `Measure.pi` (`Measure.pi_eq`, `Measure.pi_pi`), and the cylinder/rectangle API:
+  `generateFrom_pi`, `isPiSystem_pi`, `MeasureTheory.squareCylinders`,
+  `isPiSystem_squareCylinders`, and `generateFrom_squareCylinders`.
+* **Finite-dimensional laws determine the law** (general index, finite measures):
+  `ProbabilityTheory.map_eq_iff_forall_finset_map_restrict_eq` and
+  `identDistrib_iff_forall_finset_identDistrib`
+  (`Mathlib/Probability/Process/FiniteDimensionalLaws.lean`). Tau Ceti only adds the
+  `pathLaw` / `Fin n`-prefix wrappers, not this core fact.
 * **Kernels and bind:** `Kernel`, `Measure.bind`, and the Giry-style measure API needed
   for mixtures of finite product measures.
 * **Conditional expectation:** `μ[f | m]`, tower properties, `condExpL2`, and
@@ -154,7 +159,8 @@ The missing pieces are:
 
 * finite-dimensional exchangeability and full exchangeability for sequence laws;
 * contractability and the proof `Exchangeable → Contractable`;
-* finite-dimensional marginal uniqueness on `ℕ → α`;
+* the `pathLaw` / `Fin n`-prefix wrappers over Mathlib's general finite-dimensional-law
+  uniqueness (the core theorem is Mathlib's, cited above);
 * product-kernel measurability for random finite product measures;
 * the common de Finetti ending turning a directing-measure bridge into `ConditionallyIID`;
 * process-relative tail σ-algebras and their antitone filtration structure;
@@ -248,7 +254,8 @@ Build:
 * `Contractable μ X`;
 * `pathLaw μ X`;
 * prefix projections and prefix cylinders;
-* finite-dimensional marginal uniqueness for laws on `ℕ → α`;
+* `pathLaw` / `Fin n`-prefix wrappers over Mathlib's finite-dimensional-law uniqueness
+  (`ProbabilityTheory.map_eq_iff_forall_finset_map_restrict_eq`);
 * finite approximation of infinite permutations;
 * extension of strictly monotone finite selections to finite permutations.
 
@@ -268,6 +275,10 @@ Contractable.map_single
 Contractable.map_pair
 Contractable.comp
 ```
+
+Mathlib's `ProbabilityTheory.map_eq_iff_forall_finset_map_restrict_eq` already proves that
+finite-dimensional laws determine the law (for any index); `measure_eq_of_fin_marginals_eq`
+and its probability variant are the `ℕ`-prefix wrappers over it, not new measure theory.
 
 Also build the implication lattice and the alternate characterizations as named API:
 
@@ -300,14 +311,15 @@ TauCeti/MeasureTheory/Measure/ProductKernel.lean
 TauCeti/Probability/DeFinetti/CommonEnding.lean
 ```
 
-Build general product-kernel infrastructure:
+Consume Mathlib's product/cylinder infrastructure — `generateFrom_pi`, `isPiSystem_pi`,
+`MeasureTheory.squareCylinders`, `isPiSystem_squareCylinders`, `generateFrom_squareCylinders`,
+`Measure.pi_eq`, `Measure.pi_pi` — and build only the de Finetti-facing adapters over it:
 
-* measurable rectangles form a π-system;
-* measurable rectangles generate the finite product σ-algebra;
-* measurability of `ω ↦ Measure.pi fun _ : Fin m => ν ω`;
+* measurability of `ω ↦ Measure.pi fun _ : Fin m => ν ω` (the random product kernel);
 * the AE-measurable version needed for `Measure.bind_apply`;
-* rectangle evaluation for finite product measures;
-* equality of finite measures from agreement on rectangles.
+* rectangle evaluation and equality-from-rectangles specialized to those random product
+  measures (that rectangles form a π-system and generate the product σ-algebra is Mathlib's
+  `isPiSystem_pi` / `generateFrom_pi`).
 
 Then build the common de Finetti ending:
 
