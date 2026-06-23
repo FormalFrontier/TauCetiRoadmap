@@ -1,0 +1,28 @@
+name: Intentions
+
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [opened, closed, reopened]
+  pull_request_target:
+    types: [opened, reopened, ready_for_review, converted_to_draft, closed]
+  schedule:
+    # Every 30 minutes, so short (hour-scale) TTLs are released reasonably promptly.
+    # GitHub cron is loose, so release lags somewhat.
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  intentions:
+    permissions:
+      issues: write
+      pull-requests: write
+    uses: leanprover-community/intentions/.github/workflows/intentions.yml@v1
+    with:
+      project-title: "Tau Ceti"
+      default-ttl: "30d"
+      max-ttl: "90d"
+      app-id: ${{ vars.CLAIM_BOT_APP_ID }}
+    secrets:
+      app-private-key: ${{ secrets.CLAIM_BOT_APP_PRIVATE_KEY }}
