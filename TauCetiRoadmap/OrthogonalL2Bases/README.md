@@ -49,6 +49,14 @@ L²") is this area's contribution.
 - **The basis layer is family-agnostic and scalar-generic.** Bases are stated through the
   measure-generic `HilbertBasis ι 𝕜 (Lp 𝕜 2 μ)` API over `[RCLike 𝕜]` (the real pointwise
   functions cast via `algebraMap ℝ 𝕜`); do **not** duplicate the API for `ℝ` and `ℂ` separately.
+- **Every basis milestone exports its element-level `coe_*`, not just the bundled term.** A
+  `HilbertBasis` shipped only as a bundled term — without `⇑basis = explicit family` — is
+  near-vacuous: bare existence of an `ℕ`- (resp. `ι×κ`-) indexed Hilbert basis is just a
+  separability/cardinality fact and carries none of the Hermite/Chebyshev/tensor content. So
+  each basis target below additionally exports a **named** element-level lemma (`coe_*`),
+  immediate from `HilbertBasis.coe_mkOfOrthogonalEqBot`, which downstream `coe_*` discharge
+  obligations (e.g. the Gaussian Hilbert / Wiener-chaos consumer) consume — a bundle-only
+  export is green but undischargeable.
 - **The bridge is parametrized by the orthogonality relation.** Part B's bridge (B2) takes the
   relation `∫ pₘ pₙ w = cₙδ` (with `cₙ > 0`) and a polynomial-density/completeness hypothesis as
   **arguments** — family-agnostic and grounded by construction. The Hermite instance supplies that
@@ -148,6 +156,11 @@ analytic facts (A2–A3) live under `Analysis/SpecialFunctions/…`. Names descr
   are one theorem. (Over `ℂ` the inner product is sesquilinear, so the Parseval proof for the
   `algebraMap ℝ 𝕜`-lifted *real* basis carries `starRingEnd` bookkeeping even though the `ψₙ` are
   real — a known boilerplate cost, not a design issue.)
+- **Element-level export** (a named deliverable, not just the bundled term):
+  `coe_hermiteHilbertBasis : ⇑(hermiteHilbertBasis 𝕜) = hermiteFunctionLp 𝕜` — immediate from
+  `HilbertBasis.coe_mkOfOrthogonalEqBot`. This is what makes the headline non-vacuous (the
+  bundled `HilbertBasis ℕ` alone is a separability fact); the Gaussian/Wiener-chaos consumer
+  discharges its `coe_*` obligation against this lemma.
 - *Acceptance:* Parseval for an explicit `f`; coordinates of `ψ₀` are `Finsupp.single 0 1`;
   `‖f‖² = ∑' n, ‖⟪ψₙ,f⟫‖²`; both `ℝ` and `ℂ` instantiate.
 
@@ -194,6 +207,13 @@ change of variables when the family is defined on a rescaled argument:** the Her
 `w = e^{-x²}`, `pₙ = Hₙ(·√2)`, `cₙ = n!√π` (so `pₙ·√w/√cₙ = ψₙ`), which is A1's probabilists'
 relation transported by `u = x√2` — *not* `w = e^{-x²/2}` read off A1 directly.
 
+**Element-level export** (a named deliverable): the bridge ships `coe_*` for its output
+basis — `⇑(ofOrthogonality …) = fun n => ((pₙ · √w / √cₙ : ℝ → ℝ) cast to Lp 𝕜 2 μ)`, the
+normalized family — so the Hermite (A3) and Chebyshev (Part C) instances obtain their
+`coe_*` by **specialization**, not re-derivation. Free from
+`HilbertBasis.coe_mkOfOrthogonalEqBot`; required because a bundle-only bridge output is green
+but undischargeable downstream.
+
 ### B3 — L²-product basis
 **The load-bearing milestone is completeness, not orthonormality.** Orthonormality of the products
 `ψᵢ(x)·φⱼ(y)` is the easy Fubini half; the real theorem is that the algebraic tensor
@@ -202,6 +222,12 @@ system), which needs `μ, ν` **σ-finite** — state `[SigmaFinite μ] [SigmaFi
 Mathlib's `OrthonormalBasis.tensorProduct` is the abstract tensor with *finite-index* hypotheses
 (`[Fintype ι₁] [Fintype ι₂]`), so it does **not** give the concrete `L²(μ.prod ν)` statement — this
 density result is the gap B3 fills, and the milestone must read as that, not as cheaper.
+
+**Element-level export** (a named deliverable):
+`coe_productHilbertBasis : ⇑(productHilbertBasis b c) = fun ij => (b ij.1) ⊗ (c ij.2)` — the
+pointwise product `(x, y) ↦ (b i) x · (c j) y` in `Lp 𝕜 2 (μ.prod ν)` — so the multi-index
+`Π i, ℕ` and the `B3 ∘ A` multi-dimensional Hermite instances inherit their `coe_*` by
+iteration rather than re-proving the tensor characterization each time.
 
 **Index-generic** (this resolves the `ℕ`-vs-product question): for Hilbert bases of `L²(μ)` and
 `L²(ν)` indexed by *arbitrary* types `ι₁, ι₂`, B3 produces a Hilbert basis of `L²(μ ⊗ ν)` indexed
