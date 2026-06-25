@@ -20,6 +20,7 @@ body:
       options:
         - CombinatorialHeegaardFloer
         - EffectiveBounds
+        - Exchangeability
         - GeometricTopology
         - HeegaardFloer
         - JacobianChallenge
