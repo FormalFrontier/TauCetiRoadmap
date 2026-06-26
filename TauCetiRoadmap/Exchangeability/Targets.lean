@@ -96,19 +96,14 @@ def ConditionallyIID (μ : Measure Ω) (X : ℕ → Ω → α) : Prop :=
       μ.map (fun ω => fun i : Fin m => X (k i) ω) =
         μ.bind (fun ω => (ProbabilityMeasure.pi (fun _ : Fin m => ν ω)).toMeasure)
 
-/-- **Layer 0, finite-marginal uniqueness.** Two finite measures on path space agreeing on
-every finite-dimensional prefix marginal are equal. This and the probability variant below
-are roadmap-local ℕ-prefix wrappers over Mathlib's general
-`ProbabilityTheory.map_eq_iff_forall_finset_map_restrict_eq`, not new measure theory; the
-`sorry` is the thin `Fin n`-prefix ↔ finite-subset adapter. -/
-example {μ ν : Measure (ℕ → α)} [IsFiniteMeasure μ] [IsFiniteMeasure ν]
-    (h : ∀ (n : ℕ) (S : Set (Fin n → α)), MeasurableSet S →
-      μ.map (prefixProj α n) S = ν.map (prefixProj α n) S) :
-    μ = ν := by
-  sorry
-
-/-- **Layer 0, finite-marginal uniqueness (probability version).** -/
-example {μ ν : Measure (ℕ → α)} [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+/-- **Layer 0, finite-marginal uniqueness.** Two measures on path space, with `μ` finite,
+agreeing on every finite-dimensional prefix marginal are equal (`ν`'s finiteness is forced by
+the conclusion). This is a roadmap-local ℕ-prefix wrapper over Mathlib's projective-limit
+machinery (`IsProjectiveLimit.unique`), not new measure theory; the `sorry` is the thin
+`Fin n`-prefix ↔ finite-subset adapter. Assuming only `[IsFiniteMeasure]` covers probability
+applications too, via the `IsProbabilityMeasure → IsFiniteMeasure` instance, so no separate
+probability wrapper is needed. -/
+example {μ ν : Measure (ℕ → α)} [IsFiniteMeasure μ]
     (h : ∀ (n : ℕ) (S : Set (Fin n → α)), MeasurableSet S →
       μ.map (prefixProj α n) S = ν.map (prefixProj α n) S) :
     μ = ν := by
