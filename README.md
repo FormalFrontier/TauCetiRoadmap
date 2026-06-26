@@ -7,8 +7,7 @@ because these are goals, not proofs). The AI-authored mathematics that discharge
 in the code repo; review machinery lives in
 [TauCetiReview](https://github.com/FormalFrontier/TauCetiReview).
 
-Tau Ceti is being incubated jointly by the [Lean FRO](https://lean-lang.org/fro/) and the
-[Mathlib Initiative](https://mathlib-initiative.org/), in partnership with academic and
+Tau Ceti is being incubated by the [Lean FRO](https://lean-lang.org/fro/) in partnership with academic and
 industry groups.
 
 ## Roadmaps
