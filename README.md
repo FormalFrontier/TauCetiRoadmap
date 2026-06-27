@@ -47,7 +47,9 @@ reviewers, can act on it without guessing.
   result that needs an explicit bound carries `∀ x ∈ s, ‖f x‖ ≤ C` directly in its hypotheses (as
   in `norm_cfc_le`), and uses `Bornology.IsBounded` when no constant is needed
   (`isBounded_iff_forall_norm_le'` relates the two). We do the same, and never wrap a one-line
-  bound in a new predicate.
+  bound in a new predicate. When Mathlib's name for something is itself a Mathlib-ism that a
+  mathematician would not recognize (`ModularFormClass`, say), link the Mathlib declaration the
+  first time you use it, so a reader can see what the term denotes rather than guess.
 
 - **Specify the mathematics, not your existing code.** Say what each milestone should prove,
   intrinsically, so a reviewer can judge it on its own terms. If you're porting existing work,
