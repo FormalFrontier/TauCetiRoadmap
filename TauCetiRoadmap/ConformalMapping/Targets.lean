@@ -11,9 +11,13 @@ rectangle-integral vanishing lemmas, `Complex.UnitDisc`, `conjCLE`/`starRingEnd 
 `TendstoLocallyUniformlyOn` — but not the geometric superstructure. We build it in
 `TauCeti/Analysis/Complex/Conformal/`, with the Riemann mapping theorem as the summit.
 
-A representative milestone from each layer is stated below with `sorry` (allowed in this
-human-owned roadmap library); what lands in `TauCeti/` must be proved with only the three
-kernel axioms. The residue/winding/global-Cauchy and argument-principle layer is the sibling
+A representative milestone from each of the core layers **L0–L4** is stated below with `sorry`
+(allowed in this human-owned roadmap library); what lands in `TauCeti/` must be proved with only
+the three kernel axioms. The boundary layers **L5 (Carathéodory, Jordan-domain case)** and **L6
+(Schwarz–Christoffel)** are described narratively in `README.md` and do not yet carry
+representative target signatures here (no Jordan-domain / prime-ends or polygon-map vocabulary in
+the pinned Mathlib to state them cleanly against); they will be added as the boundary API takes
+shape. The residue/winding/global-Cauchy and argument-principle layer is the sibling
 `ContourIntegration` roadmap (PR #35, `TauCeti/Analysis/Contour/`) — **consumed**, not
 re-derived here; L0 below adds only the conformal-geometric consequences (Rouché, Hurwitz,
 Morera-as-named). The modular/elliptic uniformization that L4/L5 feed lives in the
