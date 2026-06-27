@@ -12,3 +12,4 @@ import TauCetiRoadmap.CombinatorialHeegaardFloer.Targets
 import TauCetiRoadmap.HeegaardFloer.Targets
 import TauCetiRoadmap.GeometricTopology.Targets
 import TauCetiRoadmap.Exchangeability.Targets
+import TauCetiRoadmap.InfinitaryLogic.Targets

@@ -24,6 +24,7 @@ industry groups.
 10. [One-parameter semigroups, completely monotone functions, and BCR Bochner](TauCetiRoadmap/OneParameterSemigroups/README.md)
 11. [Exchangeability and de Finetti](TauCetiRoadmap/Exchangeability/README.md)
 12. [Weighted orthogonal L² bases: completeness, Hilbert bases, and products of orthogonal systems](TauCetiRoadmap/OrthogonalL2Bases/README.md)
+13. [Infinitary logic, Scott analysis, and the descriptive set theory of countable models](TauCetiRoadmap/InfinitaryLogic/README.md)
 
 ## Writing a roadmap
 
