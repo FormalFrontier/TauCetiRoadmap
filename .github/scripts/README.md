@@ -24,9 +24,12 @@ nicer title than the heading), the heal sees no gap and leaves it untouched.
 
 ### One-time setup for the auto-commit
 
-The sync workflow pushes to `main`, which is protected (PR + code-owner review),
-so it authenticates as a dedicated GitHub App that is allowed to bypass that
-requirement. One-time setup by an org admin:
+The sync workflow pushes to `main`, which is protected, so it authenticates as a
+dedicated GitHub App that sits in the bypass list of main's protection ruleset.
+A ruleset (not classic branch protection) is required here: classic protection
+has no way to let an app bypass a required status check, so its direct push is
+rejected with "Required status check 'build' is expected"; a ruleset's bypass
+list waives every rule for the listed actor. One-time setup by an org admin:
 
 1. **Create the app** (org Settings -> Developer settings -> GitHub Apps -> New).
    - Webhook: uncheck *Active* (it needs none).
@@ -39,11 +42,12 @@ requirement. One-time setup by an org admin:
 4. **Store the credentials** on the repo:
    - `gh variable set SYNC_BOT_APP_ID --body <app-id>`
    - `gh secret set SYNC_BOT_APP_PRIVATE_KEY < path/to/key.pem`
-5. **Let it bypass the PR requirement on `main`.** Settings -> Branches ->
-   `main` -> "Require a pull request before merging" -> add the app under
-   "Allow specified actors to bypass required pull requests". Nothing else
-   changes: there is no push-actor restriction, and required status checks gate
-   PR merges, not the app's direct push.
+5. **Add the app to the ruleset's bypass list.** `main` is governed by a
+   repository ruleset (Settings -> Rules -> Rulesets -> "main"), which requires a
+   pull request with code-owner review and the `build` check, and blocks
+   force-pushes and deletion. Add the app to that ruleset's **Bypass list**
+   (Bypass mode: *Always*). Those rules still apply to everyone else, so humans
+   are protected exactly as before; only the app may push directly.
 
 If setup is incomplete the workflow still runs and computes the fix, but the
 final `git push` fails, which is a visible signal rather than a silent miss.
