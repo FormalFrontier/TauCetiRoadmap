@@ -3,7 +3,7 @@
 Mathlib has the Cauchy integral formula and the Cauchy–Goursat theory
 (`Mathlib/Analysis/Complex/CauchyIntegral.lean`), circle integrals
 (`Mathlib/MeasureTheory/Integral/CircleIntegral.lean`), and the local theory of
-meromorphic functions (`Mathlib/Analysis/Meromorphic/*`, including `MeromorphicAt.order`
+meromorphic functions (`Mathlib/Analysis/Meromorphic/*`, including `meromorphicOrderAt`
 and the principal-part machinery). But the residue calculus it can reach is the **classical**
 one, where the singularities lie strictly *off* the contour and the winding number is an
 integer.
@@ -47,34 +47,50 @@ Pin these once; implementors drift badly otherwise.
   Keep the PV predicate (`HasCauchyPV …`, an existence-and-value statement) separate from
   genuine integrability, and never silently identify them.
 - **Residues via the order/`Laurent` API.** The residue at an isolated singularity is the
-  order-`(−1)` Laurent coefficient; reuse `MeromorphicAt.order` and the principal-part
+  order-`(−1)` Laurent coefficient; reuse `meromorphicOrderAt` and the principal-part
   machinery. For a simple pole it is `lim_{z→z₀}(z − z₀) f(z)`. Do not define a parallel
   "order of vanishing".
 
 ## What Mathlib already has (consume)
 
 - **Cauchy's theorem and the integral formula:** `Mathlib/Analysis/Complex/CauchyIntegral.lean`
-  (`Complex.circleIntegral_sub_center_inv`, the Cauchy integral formula, the disc/annulus
+  (`circleIntegral.integral_sub_center_inv`, the Cauchy integral formula, the disc/annulus
   theory).
-- **Circle integrals:** `Mathlib/MeasureTheory/Integral/CircleIntegral.lean` (`circleIntegral`,
-  `circleMap`, `∮ z in C(c, R), f z`).
-- **Meromorphic functions:** `Mathlib/Analysis/Meromorphic/*` (`MeromorphicAt`,
-  `MeromorphicOn`, `MeromorphicAt.order`, principal parts) — the residue is the order-`(−1)`
-  Laurent coefficient against this API.
+- **Circle integrals:** `circleIntegral`, `∮ z in C(c, R), f z`
+  (`Mathlib/MeasureTheory/Integral/CircleIntegral.lean`); `circleMap` is now in
+  `Mathlib/Analysis/SpecialFunctions/Complex/CircleMap.lean`.
+- **Meromorphic functions:** `MeromorphicAt` and `MeromorphicOn`
+  (`Mathlib/Analysis/Meromorphic/Basic.lean`), `meromorphicOrderAt`
+  (`Mathlib/Analysis/Meromorphic/Order.lean`), and the principal-part machinery — the residue is
+  the order-`(−1)` Laurent coefficient against this API.
 - **Interval integrals and the FTC:** `Mathlib/MeasureTheory/Integral/IntervalIntegral.lean`,
   `…/FundThmCalculus.lean` — the substrate for the arc FTC and the real winding integral.
-- **Homotopy of paths and signed curvature:** `Mathlib/Topology/Homotopy/Path.lean`, and the
-  differential-geometry curvature API, inputs to homotopy invariance and to HW Prop 2.3.
+- **Homotopy of paths:** `Mathlib/Topology/Homotopy/Path.lean` — the input to homotopy invariance
+  of the winding number off the curve.
+  ⚠ Mathlib has **no packaged signed-curvature notion for plane curves** (a grep of the pinned
+  toolchain finds nothing usable), so signed curvature is **not** in this consume list. HW Prop 2.3's
+  crossing value is the standard `½·k_Λ·|Λ̇|`, which for a plane curve `Λ = x + iy` is the elementary
+  rational expression `(ẋÿ − ẏẍ)/(2(ẋ² + ẏ²))`. The roadmap states the value in this explicit form —
+  exactly as HW do and as the `sorry`-free AINTLIB proof formalizes it — rather than routing it
+  through a general signed-curvature theory; `k_Λ` is the textbook signed curvature, not a Tau-Ceti
+  coinage. A module-docstring note should simply record that the value is given by the explicit
+  formula because Mathlib has no signed-curvature API to cite.
 
 ## What is missing (build here)
 
 The generalized winding number for points on a cycle (HW Def 2.1) and its geometry (the model
 sector value `α/2π`, the finite-crossing decomposition HW Prop 2.2, the real bounded-integrand
-formula and the `½·curvature` value HW Prop 2.3); the residue against `MeromorphicAt.order`
+formula and the `½·curvature` value HW Prop 2.3); the residue against `meromorphicOrderAt`
 and the **classical residue theorem** `∮_C f = 2πi · Σ_s n_s(C)·Res_s f` for a cycle avoiding
 its poles; the **global (homological) Cauchy theorem** (proved by Dixon's argument); and the
 headline **Hungerbühler–Wasem generalized residue theorem** (HW Thm 3.3), valid with
 singularities *on* the cycle. None of this is upstream.
+
+`Targets.lean` pins the load-bearing **definitions** — the generalized `windingNumber`, the
+`residue`, the Cauchy principal value `HasCauchyPV`, and the HW conditions `ConditionAprime` /
+`ConditionB` (with `IsNullHomologous`) — together with the **named milestones** below as
+`sorry`-targets, so each is claimable and the summit statement is machine-checked to be expressible
+(Mathlib has none of these objects).
 
 ---
 
@@ -111,8 +127,14 @@ expressible in `TauCeti/`, its milestones go into `Targets.lean` (with `sorry`).
 - **HW Proposition 2.3 (the real, bounded-integrand formula).** For a closed piecewise-`C^{1,1}`
   immersion `Λ = x + iy`, `n₀(Λ) = (1/2π) ∫_a^b (x ẏ − y ẋ)/(x² + y²) dt` with **bounded
   integrand** (no principal value needed in the real form), and at a crossing `t̃` (where
-  `Λ(t̃) = 0`) the integrand tends to `½·k_Λ(t̃)·|Λ̇(t̃)|`, half the signed curvature times
-  speed. This is the computational workhorse — a genuine integral, not a PV.
+  `Λ(t̃) = 0`) the integrand tends to `½·k_Λ(t̃)·|Λ̇(t̃)| = (ẋÿ − ẏẍ)/(2(ẋ² + ẏ²))` at `t̃`, half
+  the signed curvature times speed. This is the computational workhorse — a genuine integral, not a
+  PV.
+  ⚠ Pin the regularity per part: the **bounded integrand** — all the residue theorem actually needs —
+  holds for `C^{1,1}`, while the **crossing value** `½·k·|Λ̇|` needs `C²` near `t̃` for `k` to be
+  pointwise defined. Here `k_Λ` is the standard signed curvature, given by the explicit formula above;
+  Mathlib has no signed-curvature API to consume (see the consume list), so state it explicitly, as HW
+  and the AINTLIB proof do.
   ⚠ The complex form needs the PV; the real form does not. Keep both and relate them.
 
 ### Layer 2: residues, the Cauchy primitive, and the classical residue theorem
@@ -122,11 +144,18 @@ expressible in `TauCeti/`, its milestones go into `Targets.lean` (with `sorry`).
 - **Residue at an isolated singularity** `Res_{z₀} f` (the order-`(−1)` Laurent coefficient;
   for a simple pole the limit `lim_{z→z₀}(z − z₀)f(z)`); `ℂ`-linearity; the **simple-pole
   decomposition** `f = (holomorphic) + Σ_s (Res_s f)/(z − s)`.
-- **The classical residue theorem** `∮_C f = 2πi · Σ_s n_s(C)·Res_s f` for a closed
-  piecewise-`C¹` cycle `C` avoiding the finite pole set `S` — the special case of HW Thm 3.3
-  with integer winding numbers, recovering the Cauchy integral formula. ⚠ The bare circle
-  case (poles off the circle) is already a short corollary of Mathlib's Cauchy integral
-  formula, so it is *not* what the engine adds.
+- **The classical residue theorem** — two scopes, deliberately kept apart:
+  - *Layer 2 (here): the disc/circle case* `∮_{C(c,R)} f = 2πi · Σ_s Res_s f` for a circle bounding
+    a disc with the finite pole set `S` strictly **inside** (each interior pole has integer winding
+    `1`), provable from Mathlib's disc Cauchy theory — seeded as `classicalResidueTheorem_circle` in
+    `Targets.lean`, and recovering the Cauchy integral formula.
+  - *The general arbitrary-cycle case* `∮_C f = 2πi · Σ_s n_s(C)·Res_s f` for a closed
+    piecewise-`C¹` cycle `C` avoiding `S`. ⚠ Avoiding `S` is **not** sufficient on an arbitrary
+    holomorphy domain `Ω`: `C` must be **null-homologous in `Ω`** (`n_w(C) = 0` for every `w ∉ Ω`).
+    This version is **at least as strong as the homology Cauchy theorem** — its `S = ∅` case is
+    exactly `∮_C f = 0` for null-homologous `C` (Layer 3) — so it is **deferred to Layer 3+**, not
+    proved here. The bare circle case with poles *off* the circle is already a short corollary of
+    Mathlib's Cauchy integral formula, so it is *not* what the engine adds.
 - **The argument principle** (the valence formula's contour identity) — what the engine *does*
   add. Applying the residue theorem to `f'/f = logDeriv f`, `(2πi)⁻¹ ∮_C f'/f = Σ_z ord_z(f)`
   counts zeros minus poles with multiplicity (`Res_z (f'/f) = ord_z f`). Mathlib has `logDeriv`
@@ -168,12 +197,13 @@ expressible in `TauCeti/`, its milestones go into `Targets.lean` (with `sorry`).
 
 - **Model sector:** a point at a corner of interior angle `α` has winding `α/2π`; a smooth
   crossing (`α = π`) has winding `½` (HW (2.4)).
-- `n_c(circle) = 1` for a counterclockwise circle about an interior `c`
-  (reconciles with `circleIntegral_sub_center_inv`); `n` is `0` outside.
+- `n_c(circle) = 1` for a counterclockwise circle about an interior `c` (`windingNumber_circle`,
+  reconciling with `circleIntegral.integral_sub_center_inv`); `n` is `0` outside.
 - **Classical residue theorem** with two simple poles inside a circle returns
   `2πi·(Res₁ + Res₂)`; the one-pole case is the Cauchy integral formula.
 - **A simple pole on the contour** contributes the **half-residue** `πi·Res_s f` (winding `½`)
-  — the on-cycle acceptance test, and the bridge to the valence formula's `i` and `ρ`.
+  — the on-cycle acceptance test (`hasCauchyPV_half_residue`), and the bridge to the valence
+  formula's `i` and `ρ`.
 - **An improper integral** (e.g. a Cauchy principal value along the real axis with a simple
   pole at `0`) evaluated by HW Thm 3.3 where the classical theorem does not apply — HW's
   motivating example.
