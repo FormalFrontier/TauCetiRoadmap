@@ -1,10 +1,10 @@
 import Mathlib
 
 /-!
-# Infinitary logic, Scott analysis, and the DST of countable models: target signatures
+# Infinitary syntax, back-and-forth, and Scott analysis: target signatures
 
-The narrative roadmap, the library spine, the layer-by-layer build plan (Layers 0–13), the
-worked examples, and the references are in `README.md`.
+The narrative roadmap, the library spine, the layer-by-layer build plan (Layers 0–3), the worked
+examples, and the references are in `README.md`.
 
 This file holds the **Layer 0/1** target shapes whose types are already expressible against the
 pinned Mathlib: the two infinitary syntaxes built over `FirstOrder.Language` — `BoundedFormulaω`
@@ -14,22 +14,14 @@ finitary embedding `toLω`, and potential isomorphism stated with Mathlib's back
 vocabulary (`FGEquiv`, `IsExtensionPair`). These elaborate against Mathlib and the milestone
 theorems are stated with `sorry` (allowed in this human-owned roadmap library).
 
-Layer-2+ shapes are kept in `README.md` fenced code blocks until their machinery is grounded:
+Layer-2+ shapes are kept in `README.md` fenced code blocks until grounded: Layer 2 (the countable
+coded-formula proxy `FormulaCode` and the refinement-counting bridge) and Layer 3 (Scott rank,
+canonical Scott formulas, and Scott's isomorphism theorem). The roadmap intentionally stops there:
+model existence, admissible sets / Barwise, invariant DST, Morley counting, Morley–Hanf, many-sorted
+model theory, and Lκλ are out of scope here (separate roadmap PRs).
 
-* Layer 2 (Scott rank, canonical Scott formulas, Scott's theorem) — including the countable
-  coded-formula proxy `FormulaCode` and the countable-refinement bridge that makes the summit
-  unconditional;
-* Layer 3 (consistency properties, omitting types, downward Löwenheim–Skolem);
-* Layer 4 (admissible fragments, Barwise compactness, Nadel's bound);
-* Layer 5 (Ehrenfeucht–Mostowski templates, indiscernibles, stretching);
-* Layer 6 (partition calculus: arrow notation, infinite Ramsey, Erdős–Rado);
-* Layer 7 (the Hanf number for Lω₁ω — unconditional Morley–Hanf);
-* Layer 8 (the standard-Borel space of countable structures; satisfaction/isomorphism Borelness);
-* Layer 9 (Borel equivalence relations; the Silver, G₀, and Glimm–Effros dichotomies);
-* Layer 10 (Morley counting: the bounded-Scott-height ≤ℵ₀/2^ℵ₀ dichotomy, and the full ≤ℵ₁/2^ℵ₀
-  theorem);
-* Layers 11–13 (functions/many-sorted via relationalization; other infinitary logics Lκλ;
-  effective/admissible-recursive Scott analysis).
+Names here are target shapes, not final namespace commitments; audit them against Mathlib conventions
+before implementation.
 
 These are roadmap-local target shapes; the implementation in `TauCeti/` may refine names and
 namespaces, but the statements below pin the intended early milestones and the dependency order.
