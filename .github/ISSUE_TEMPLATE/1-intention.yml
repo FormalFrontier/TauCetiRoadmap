@@ -20,11 +20,13 @@ body:
       options:
         - CombinatorialHeegaardFloer
         - EffectiveBounds
+        - Exchangeability
         - GeometricTopology
         - HeegaardFloer
         - JacobianChallenge
         - Multiquadratic
         - OneParameterSemigroups
+        - OrthogonalL2Bases
         - PDE
         - ReductiveGroups
         - UniversalCovers
