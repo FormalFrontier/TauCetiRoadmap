@@ -144,7 +144,8 @@ not improvise.
   `IsExtensionPair` (`Mathlib/ModelTheory/PartialEquiv.lean`), including `embedding_from_cg` /
   `equiv_between_cg` (an equivalence between countably generated structures from an extension pair);
   the countably-generated-structure API `Structure.CG`, `Structure.cg_of_countable`,
-  `Structure.cg_iff_countable` (`Mathlib/ModelTheory/FinitelyGenerated.lean`); `DirectLimit`
+  `Structure.cg_iff_countable` (with its function-symbol-countability hypothesis;
+  `Mathlib/ModelTheory/FinitelyGenerated.lean`); `DirectLimit`
   (`DirectLimit.lean`); Fraïssé theory (`Fraisse.lean`).
 * **Ordinals and cardinals:** `Ordinal.omega0` (`SetTheory/Ordinal/Basic.lean`), `Ordinal.limitRecOn`
   (`SetTheory/Ordinal/Arithmetic.lean`), `Order.IsSuccLimit` (`Order/SuccPred/Limit.lean`);
@@ -235,8 +236,9 @@ formula types over Mathlib's `FirstOrder.Language`:
 * `Realize` for both types, with simp lemmas for every connective and quantifier;
 * the finitary embedding `toLω : L.BoundedFormula α n → BoundedFormulaω L α n` and the L∞ω analogue,
   with realization-compatibility (`realize_toLω`);
-* **substitution, relabeling, `castLE`, and free-variable / support operations** as named API (not
-  buried), plus quantifier rank;
+* **substitution, relabeling, `castLE`, and the free-variable support** as named API (not buried) —
+  the support is finite for finitary formulas and countable for the infinitary `iSup`/`iInf`, so use a
+  set/`support` formulation, not a `Finset` — plus quantifier rank;
 * the formula-size / cardinality predicate via `Cardinal` (no bespoke counter);
 * the **language-size bridge**: relate `[Countable (Σ n, L.Relations n)]` to Mathlib's `Language.card`
   where downstream proofs want a single cardinal bound (verify the exact `Language.card` statement —
@@ -255,7 +257,7 @@ BoundedFormulaω.realize_esup
 subst
 relabel
 castLE
-freeVarFinset
+freeVarSupport
 toLω
 realize_toLω
 ```
@@ -335,8 +337,10 @@ This is the "connect to ground" layer: raw `BoundedFormulaω` is uncountable (it
 on `ℕ → _`), so the countability arguments Scott analysis needs cannot run on it directly. The chosen
 route is the coded proxy. Build:
 
-* `FormulaCode L n`, a countable coded type for Lω₁ω formulas (explicit list-branching instead of
-  `ℕ → _`), with `Countable (FormulaCode L n)` and the interpretation `FormulaCode.toFormulaω`;
+* `FormulaCode L n`, a countable coded proxy / fragment for the Scott-refinement formulas — not all of
+  raw Lω₁ω syntax (which is uncountable), but enough to capture `BFEquiv` — using explicit
+  list-branching instead of `ℕ → _`, with `Countable (FormulaCode L n)` and the interpretation
+  `FormulaCode.toFormulaω`;
 * the bridge `BFEquiv ↔ agreement on codes` (`agree_codes_implies_BFEquiv` and its converse), so the
   coded world captures back-and-forth equivalence;
 * refinement-set countability `refinement_countable`, and the Scott-specific refinement-stabilization
@@ -396,7 +400,7 @@ scott_isomorphism
 ```
 
 **Acceptance example:** the Scott sentence of a fixed finite structure (finite Scott rank) — the
-smallest end-to-end instance of the summit, on Layers 0–2.
+smallest end-to-end instance of the summit, once Layer 3 exists, using no later layers.
 
 ## Worked examples
 
@@ -424,7 +428,7 @@ final theorems.
 
 The following topics are not targets of this roadmap. They may become separate roadmap PRs only after
 their live-Mathlib / student-project overlap has been checked and their ground dependency paths are
-written down — not part of this roadmap, not optional, not implicitly approved.
+written down — not part of this roadmap and not implicitly approved.
 
 * Model existence and downward Löwenheim–Skolem for countable Lω₁ω fragments.
 * Admissible sets and Barwise compactness.
