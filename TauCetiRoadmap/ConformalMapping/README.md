@@ -56,7 +56,7 @@ shim once the Mathlib theorem lands, and refactor downstream consumers to it —
   set — holomorphic when the input is) and `exists_continuousOn_pow_eq` (continuous n-th roots,
   likewise) — **consume these, do not rebuild them.** Beyond
   those, `#33505` itself proves the **L0–L2 prerequisites** — an argument principle, Hurwitz, and
-  the Montel/normal-families equicontinuity — internally, as ad-hoc *unnamed* lemmas rather than
+  the Montel/normal-families equicontinuity — internally, as private lemmas rather than
   reusable API. So the overlap with this roadmap is **L0–L3, not just L3**; see *Coordination with
   upstream Mathlib* below for the (correspondingly broadened) shim-deletion commitment.
 - **Isabelle/HOL:** the **Riemann mapping theorem is formalized** (Paulson, `Riemann_Mapping`
