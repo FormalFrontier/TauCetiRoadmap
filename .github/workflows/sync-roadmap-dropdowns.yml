@@ -1,0 +1,76 @@
+name: Sync roadmap dropdowns
+
+# The roadmap directories under TauCetiRoadmap/ are the source of truth for the
+# list of roadmaps. The `area` dropdowns in the issue templates copy that list,
+# and GitHub issue forms have no templating, so the copy drifts whenever a
+# roadmap is added or removed. Rather than make contributors fix that by hand,
+# this regenerates the dropdowns after every merge that changes the roadmap set
+# and commits the result straight to main.
+#
+# The commit goes to a protected branch, so it runs as a dedicated GitHub App
+# that has Contents:write and is in main's "bypass required pull requests" list.
+# Its id and private key live in the SYNC_BOT_APP_ID variable and the
+# SYNC_BOT_APP_PRIVATE_KEY secret. Setup is in .github/scripts/README.md.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "TauCetiRoadmap/**"
+      - ".github/scripts/check_roadmap_areas.py"
+      - ".github/workflows/sync-roadmap-dropdowns.yml"
+  # Run on demand, e.g. to clear existing drift right after first setup.
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+# Never let two syncs race to push to main; the latest state wins.
+concurrency: sync-roadmap-dropdowns
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      # Actions are pinned to commit SHAs (not tags): this job runs repository
+      # code with a token that can bypass branch protection, so a moved tag must
+      # not be able to change what executes.
+      - name: Mint app token
+        id: app-token
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1
+        with:
+          app-id: ${{ vars.SYNC_BOT_APP_ID }}
+          private-key: ${{ secrets.SYNC_BOT_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Sync the dropdowns and README, and push
+        run: |
+          set -euo pipefail
+          git config user.name "${{ steps.app-token.outputs.app-slug }}[bot]"
+          git config user.email "${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
+          # Regenerate against the freshest main each attempt, so a merge that
+          # races us just gets folded into the next regeneration rather than
+          # causing a non-fast-forward push or leaving drift behind.
+          for attempt in 1 2 3 4 5; do
+            git fetch --quiet origin main
+            git reset --hard --quiet origin/main
+            python3 .github/scripts/check_roadmap_areas.py --fix
+            if git diff --quiet; then
+              echo "Dropdowns and README already match the roadmap directories; nothing to do."
+              exit 0
+            fi
+            git add .github/ISSUE_TEMPLATE/1-intention.yml .github/ISSUE_TEMPLATE/2-roadmap-issue.yml README.md
+            # [skip ci] so this metadata-only commit neither runs a build nor
+            # re-triggers this workflow.
+            git commit --quiet -m "chore: sync roadmap dropdowns and README list [skip ci]"
+            if git push origin HEAD:main; then
+              echo "Pushed sync commit (attempt $attempt)."
+              exit 0
+            fi
+            echo "main moved under us; regenerating and retrying (attempt $attempt)."
+          done
+          echo "Could not push the sync after several retries." >&2
+          exit 1

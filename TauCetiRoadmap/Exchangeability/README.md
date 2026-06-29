@@ -136,8 +136,9 @@ roadmap.
 * **Finite-dimensional laws determine the law** (general index, finite measures):
   `ProbabilityTheory.map_eq_iff_forall_finset_map_restrict_eq` and
   `identDistrib_iff_forall_finset_identDistrib`
-  (`Mathlib/Probability/Process/FiniteDimensionalLaws.lean`). Tau Ceti only adds the
-  `pathLaw` / `Fin n`-prefix wrappers, not this core fact.
+  (`Mathlib/Probability/Process/FiniteDimensionalLaws.lean`). Tau Ceti does not reprove
+  finite-dimensional-law uniqueness; its Layer 0 `pathLaw` / `Fin n`-prefix marginal-uniqueness
+  wrapper is built on Mathlib's projective-limit uniqueness (`IsProjectiveLimit.unique`).
 * **Kernels and bind:** `Kernel`, `Measure.bind`, and the Giry-style measure API needed
   for mixtures of finite product measures.
 * **Conditional expectation:** `μ[f | m]`, tower properties, `condExpL2`, and
@@ -159,8 +160,8 @@ The missing pieces are:
 
 * finite-dimensional exchangeability and full exchangeability for sequence laws;
 * contractability and the proof `Exchangeable → Contractable`;
-* the `pathLaw` / `Fin n`-prefix wrappers over Mathlib's general finite-dimensional-law
-  uniqueness (the core theorem is Mathlib's, cited above);
+* the `pathLaw` / `Fin n`-prefix wrappers over Mathlib's projective-limit uniqueness
+  (`IsProjectiveLimit.unique`, from `Mathlib.MeasureTheory.Constructions.Projective`);
 * product-kernel measurability for random finite product measures;
 * the common de Finetti ending turning a directing-measure bridge into `ConditionallyIID`;
 * process-relative tail σ-algebras and their antitone filtration structure;
@@ -254,8 +255,8 @@ Build:
 * `Contractable μ X`;
 * `pathLaw μ X`;
 * prefix projections and prefix cylinders;
-* `pathLaw` / `Fin n`-prefix wrappers over Mathlib's finite-dimensional-law uniqueness
-  (`ProbabilityTheory.map_eq_iff_forall_finset_map_restrict_eq`);
+* `pathLaw` / `Fin n`-prefix wrappers over Mathlib's projective-limit uniqueness
+  (`IsProjectiveLimit.unique`);
 * finite approximation of infinite permutations;
 * extension of strictly monotone finite selections to finite permutations.
 
@@ -267,7 +268,6 @@ Key milestones:
 
 ```lean
 measure_eq_of_fin_marginals_eq
-measure_eq_of_fin_marginals_eq_prob
 exchangeable_iff_fullyExchangeable
 exists_perm_extending_strictMono
 contractable_of_exchangeable
@@ -276,9 +276,12 @@ Contractable.map_pair
 Contractable.comp
 ```
 
-Mathlib's `ProbabilityTheory.map_eq_iff_forall_finset_map_restrict_eq` already proves that
-finite-dimensional laws determine the law (for any index); `measure_eq_of_fin_marginals_eq`
-and its probability variant are the `ℕ`-prefix wrappers over it, not new measure theory.
+Mathlib's projective-limit machinery (`IsProjectiveLimit.unique`, from
+`Mathlib.MeasureTheory.Constructions.Projective`) already gives uniqueness from a projective
+family of finite-dimensional marginals; `measure_eq_of_fin_marginals_eq` is the single
+`ℕ`-prefix wrapper over it, not new measure theory. It assumes only `[IsFiniteMeasure μ]` (the
+conclusion forces `ν` finite), so probability applications are covered directly through the
+`IsProbabilityMeasure → IsFiniteMeasure` instance; no separate probability wrapper is needed.
 
 Also build the implication lattice and the alternate characterizations as named API:
 
