@@ -25,6 +25,7 @@ industry groups.
 11. [Exchangeability and de Finetti](TauCetiRoadmap/Exchangeability/README.md)
 12. [Conformal mapping and the geometric theory of holomorphic functions](TauCetiRoadmap/ConformalMapping/README.md)
 13. [Weighted orthogonal L² bases: completeness, Hilbert bases, and products of orthogonal systems](TauCetiRoadmap/OrthogonalL2Bases/README.md)
+14. [Modular forms — Hecke theory, newforms, and L-functions](TauCetiRoadmap/ModularForms/README.md)
 
 ## Writing a roadmap
 
