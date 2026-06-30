@@ -15,12 +15,15 @@ body:
       label: Roadmap area
       options:
         - CombinatorialHeegaardFloer
+        - ConformalMapping
         - EffectiveBounds
+        - Exchangeability
         - GeometricTopology
         - HeegaardFloer
         - JacobianChallenge
         - Multiquadratic
         - OneParameterSemigroups
+        - OrthogonalL2Bases
         - PDE
         - ReductiveGroups
         - UniversalCovers
