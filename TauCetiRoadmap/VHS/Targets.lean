@@ -616,14 +616,16 @@ noncomputable def MixedHodgeStructure.WC
 
 /-- **L2 milestone -- strictness (Deligne).** A morphism of mixed Hodge structures is a single
 rational map whose complexification acts on `V_ℂ`; if it is compatible with the rational weight
-filtration and the Hodge filtration, it is **strict** for both filtrations:
-`range f_ℂ ⊓ W'_k = f_ℂ(W_k)` and `range f_ℂ ⊓ F'^p = f_ℂ(F^p)`. -/
+filtration and the Hodge filtration, it is **strict** for the weight filtration (stated at both the
+rational and complex levels) and the Hodge filtration: `range fQ ⊓ W'_{ℚ,k} = fQ(W_{ℚ,k})`,
+`range f_ℂ ⊓ W'_{ℂ,k} = f_ℂ(W_{ℂ,k})`, and `range f_ℂ ⊓ F'^p = f_ℂ(F^p)`. -/
 example {V' : Type*} [AddCommGroup V'] [Module ℤ V'] [Module.Free ℤ V'] [Module.Finite ℤ V']
     (mhs : MixedHodgeStructure V) (mhs' : MixedHodgeStructure V')
     (fQ : Rationalification V →ₗ[ℚ] Rationalification V')
     (hWQ : ∀ k, (mhs.WQ k).map fQ ≤ mhs'.WQ k)
     (_hF : ∀ p, (mhs.F p).map (rationalMapToComplex fQ) ≤ mhs'.F p) :
-    (∀ k, LinearMap.range (rationalMapToComplex fQ) ⊓ mhs'.WC k =
+    (∀ k, LinearMap.range fQ ⊓ mhs'.WQ k = (mhs.WQ k).map fQ) ∧
+      (∀ k, LinearMap.range (rationalMapToComplex fQ) ⊓ mhs'.WC k =
         (mhs.WC k).map (rationalMapToComplex fQ)) ∧
       (∀ p, LinearMap.range (rationalMapToComplex fQ) ⊓ mhs'.F p =
         (mhs.F p).map (rationalMapToComplex fQ)) := sorry

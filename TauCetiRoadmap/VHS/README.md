@@ -157,8 +157,9 @@ the pinned Mathlib.
   (complexification commutes with the quotient — `tensorQuotientEquiv` / right-exactness composed with
   the per-level `ℂ ⊗_ℚ W ≃ WC` iso). So an MHS genuinely induces a pure *rational* Hodge structure on
   each graded — the correct object, not just its complexification.
-  *Milestone:* a morphism of MHS is **strict** for **both** filtrations:
-  `range f ⊓ W'_k = f(W_k)` and `range f ⊓ F'^p = f(F^p)`. The morphism is a **single rational map**
+  *Milestone:* a morphism of MHS is **strict** for the weight filtration (at both the **rational** level
+  `range fQ ⊓ W'_{ℚ,k} = fQ(W_{ℚ,k})` and its complexification) **and** the Hodge filtration
+  `range f_ℂ ⊓ F'^p = f_ℂ(F^p)`. The morphism is a **single rational map**
   `fQ`; its complex action is the *derived* `fC := rationalMapToComplex fQ`, whose conjugation-equivariance
   and `WC`-compatibility are **proved lemmas** (`rationalMapToComplex_conj`, `…_maps_WC`) rather than
   hypotheses. So the target is Deligne strictness for a genuine rational MHS morphism, not for an
