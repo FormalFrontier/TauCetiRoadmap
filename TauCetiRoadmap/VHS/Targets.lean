@@ -257,12 +257,24 @@ example {n : ℤ} (hs : HodgeStructure V n) (pol : Polarization hs)
   sorry
 
 omit [Module.Free ℤ V] [Module.Finite ℤ V] in
-/-- The `k`th graded piece `grᵂ_k = W_k/W_{k-1}` of an increasing complex weight
-filtration. The lower step is viewed as a submodule of `W_k` via `Submodule.submoduleOf`. -/
+/-- The complex quotient attached to the `k`th graded piece of a complexified weight
+filtration. In the mixed-Hodge-structure definition below this is identified with the
+complexification of the rational quotient `W_{ℚ,k}/W_{ℚ,k-1}`; it is retained as the
+target of that comparison map. -/
 @[reducible]
 noncomputable def weightGradedPiece
     (WC : ℤ → Submodule ℂ (Complexification V)) (k : ℤ) : Type _ :=
   (WC k) ⧸ ((WC (k - 1)).submoduleOf (WC k))
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- The rational `k`th graded piece `grᵂ_k = W_{ℚ,k}/W_{ℚ,k-1}` of an increasing
+rational weight filtration. The lower step is viewed inside `W_{ℚ,k}` using
+`Submodule.submoduleOf`; for mixed Hodge structures, monotonicity makes this the usual
+quotient by `W_{ℚ,k-1}`. -/
+@[reducible]
+noncomputable def weightGradedRat
+    (WQ : ℤ → Submodule ℚ (Rationalification V)) (k : ℤ) : Type _ :=
+  (WQ k) ⧸ ((WQ (k - 1)).submoduleOf (WQ k))
 
 omit [Module.Free ℤ V] [Module.Finite ℤ V] in
 /-- Monotonicity supplies the inclusion `W_{k-1} ≤ W_k` behind the graded-piece
@@ -273,32 +285,101 @@ theorem weightGraded_lower_le
   exact hWC (by omega)
 
 omit [Module.Free ℤ V] [Module.Finite ℤ V] in
-/-- Lattice conjugation induced on the graded piece `grᵂ_k`. It restricts to `W_k`
-and preserves `W_{k-1}`, so `Submodule.mapQ` descends the restricted semilinear map to
-the quotient. -/
-noncomputable def gradedConj
-    (WC : ℤ → Submodule ℂ (Complexification V))
-    (hWC_conj : ∀ k, (WC k).map (latticeConj (V := V)) = WC k) (k : ℤ) :
-    weightGradedPiece (V := V) WC k →ₛₗ[starRingEnd ℂ]
-      weightGradedPiece (V := V) WC k :=
-  let upperConj : WC k →ₛₗ[starRingEnd ℂ] WC k :=
-    ((latticeConj (V := V)).domRestrict (WC k)).codRestrict (WC k) (fun x => by
-      have hx : (latticeConj (V := V) (x : Complexification V)) ∈
-          (WC k).map (latticeConj (V := V)) :=
-        Submodule.mem_map_of_mem x.property
-      simpa [hWC_conj k] using hx)
-  ((WC (k - 1)).submoduleOf (WC k)).mapQ ((WC (k - 1)).submoduleOf (WC k))
-    upperConj (fun x hx => by
-      change (latticeConj (V := V) (x : Complexification V)) ∈ WC (k - 1)
-      have hx' : (latticeConj (V := V) (x : Complexification V)) ∈
-          (WC (k - 1)).map (latticeConj (V := V)) :=
-        Submodule.mem_map_of_mem hx
-      simpa [hWC_conj (k - 1)] using hx')
+/-- The complexification of a rational vector space, in the orientation `ℂ ⊗[ℚ] U`. -/
+abbrev ratComplexify (U : Type*) [AddCommGroup U] [Module ℚ U] : Type _ :=
+  TensorProduct ℚ ℂ U
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- The canonical conjugation on `ℂ ⊗[ℚ] U`, conjugating only the scalar tensor factor. -/
+noncomputable def ratConj (U : Type*) [AddCommGroup U] [Module ℚ U] :
+    ratComplexify U →ₛₗ[starRingEnd ℂ] ratComplexify U where
+  toFun := TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+    (LinearMap.id : U →ₗ[ℚ] U)
+  map_add' := by intro x y; simp
+  map_smul' c x := by
+    change TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+        (LinearMap.id : U →ₗ[ℚ] U) (c • x) =
+      (starRingEnd ℂ) c • TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+        (LinearMap.id : U →ₗ[ℚ] U) x
+    refine TensorProduct.induction_on x ?hz ?ht ?ha
+    · simp
+    · intro z u
+      rw [TensorProduct.smul_tmul']
+      rw [TensorProduct.map_tmul]
+      rw [TensorProduct.map_tmul]
+      rw [TensorProduct.smul_tmul']
+      simp [map_mul]
+    · intro x y hx hy
+      calc
+        TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+            (LinearMap.id : U →ₗ[ℚ] U) (c • (x + y)) =
+          TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+            (LinearMap.id : U →ₗ[ℚ] U) (c • x + c • y) := by rw [smul_add]
+        _ = TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+              (LinearMap.id : U →ₗ[ℚ] U) (c • x) +
+            TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+              (LinearMap.id : U →ₗ[ℚ] U) (c • y) := by rw [map_add]
+        _ = (starRingEnd ℂ) c • TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+              (LinearMap.id : U →ₗ[ℚ] U) x +
+            (starRingEnd ℂ) c • TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+              (LinearMap.id : U →ₗ[ℚ] U) y := by rw [hx, hy]
+        _ = (starRingEnd ℂ) c •
+            (TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+                (LinearMap.id : U →ₗ[ℚ] U) x +
+              TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+                (LinearMap.id : U →ₗ[ℚ] U) y) := by rw [smul_add]
+        _ = (starRingEnd ℂ) c • TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+              (LinearMap.id : U →ₗ[ℚ] U) (x + y) := by rw [map_add]
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+@[simp]
+theorem ratConj_tmul (U : Type*) [AddCommGroup U] [Module ℚ U] (z : ℂ) (u : U) :
+    ratConj U (z ⊗ₜ[ℚ] u) = (starRingEnd ℂ z) ⊗ₜ[ℚ] u :=
+  rfl
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+theorem ratConj_involutive (U : Type*) [AddCommGroup U] [Module ℚ U] :
+    Function.Involutive (ratConj U) := by
+  intro x
+  change TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+      (LinearMap.id : U →ₗ[ℚ] U)
+      (TensorProduct.map (starRingEnd ℂ).toAddMonoidHom.toRatLinearMap
+        (LinearMap.id : U →ₗ[ℚ] U) x) = x
+  refine TensorProduct.induction_on x ?hz ?ht ?ha
+  · simp
+  · intro z u
+    rw [TensorProduct.map_tmul]
+    rw [TensorProduct.map_tmul]
+    simp
+  · intro x y hx hy
+    rw [map_add, map_add, hx, hy]
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- The canonical conjugation on `ℂ ⊗[ℚ] U` as a conjugate-linear equivalence. -/
+noncomputable def ratConjEquiv (U : Type*) [AddCommGroup U] [Module ℚ U] :
+    ratComplexify U ≃ₛₗ[starRingEnd ℂ] ratComplexify U where
+  toLinearMap := ratConj U
+  invFun := ratConj U
+  left_inv := ratConj_involutive U
+  right_inv := ratConj_involutive U
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- The rational graded conjugation: canonical conjugation on the complexification of
+`grᵂ_k(W_ℚ)`. -/
+noncomputable def gradedConj (WQ : ℤ → Submodule ℚ (Rationalification V)) (k : ℤ) :
+    ratComplexify (weightGradedRat (V := V) WQ k) ≃ₛₗ[starRingEnd ℂ]
+      ratComplexify (weightGradedRat (V := V) WQ k) :=
+  ratConjEquiv (weightGradedRat (V := V) WQ k)
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+theorem gradedConj_involutive (WQ : ℤ → Submodule ℚ (Rationalification V)) (k : ℤ) :
+    Function.Involutive (gradedConj (V := V) WQ k) :=
+  ratConj_involutive (weightGradedRat (V := V) WQ k)
 
 omit [Module.Free ℤ V] [Module.Finite ℤ V] in
 /-- The Hodge filtration induced on `grᵂ_k`: image of `F^p ∩ W_k` under the quotient
 map `W_k → W_k/W_{k-1}`. -/
-noncomputable def gradedF
+noncomputable def complexGradedF
     (WC : ℤ → Submodule ℂ (Complexification V))
     (F : ℤ → Submodule ℂ (Complexification V)) (k p : ℤ) :
     Submodule ℂ (weightGradedPiece (V := V) WC k) :=
@@ -306,17 +387,131 @@ noncomputable def gradedF
     (((WC (k - 1)).submoduleOf (WC k)).mkQ)
 
 omit [Module.Free ℤ V] [Module.Finite ℤ V] in
-/-- The genuine induced-purity condition on a graded weight piece: the induced filtration is
-bounded and `k`-opposed with respect to the induced conjugation. -/
+/-- The canonical equivalence from `ℂ ⊗[ℚ] W_ℚ` onto the complex subspace of `V_ℂ`
+associated to `W_ℚ`. -/
+noncomputable def rationalToComplexSubmoduleEquiv
+    (W : Submodule ℚ (Rationalification V)) :
+    ratComplexify W ≃ₗ[ℂ] rationalToComplexSubmodule (V := V) W :=
+  (Submodule.toBaseChange.toLinearEquiv ℂ W).trans
+    ((rationalToComplexLinearEquiv (V := V)).ofSubmodules (W.baseChange ℂ)
+      (rationalToComplexSubmodule (V := V) W) rfl)
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+theorem rationalToComplexSubmoduleEquiv_range_lTensor
+    {A B : Submodule ℚ (Rationalification V)} (hAB : A ≤ B) :
+    (LinearMap.range
+        (TensorProduct.AlgebraTensorModule.lTensor ℂ ℂ
+          (((A.submoduleOf B).subtype).restrictScalars ℚ))).map
+          (rationalToComplexSubmoduleEquiv (V := V) B : ratComplexify B →ₗ[ℂ]
+            rationalToComplexSubmodule (V := V) B) =
+      (rationalToComplexSubmodule (V := V) A).submoduleOf
+        (rationalToComplexSubmodule (V := V) B) := by
+  ext y
+  constructor
+  · rintro ⟨x, hx, rfl⟩
+    rcases hx with ⟨t, rfl⟩
+    change ((rationalToComplexSubmoduleEquiv (V := V) B)
+        ((TensorProduct.AlgebraTensorModule.lTensor ℂ ℂ
+          (((A.submoduleOf B).subtype).restrictScalars ℚ)) t) :
+        Complexification V) ∈ rationalToComplexSubmodule (V := V) A
+    refine TensorProduct.induction_on t ?hz ?ht ?ha
+    · simp [rationalToComplexSubmoduleEquiv]
+    · intro z a
+      change ((rationalToComplexLinearEquiv (V := V)).ofSubmodules (B.baseChange ℂ)
+          (rationalToComplexSubmodule (V := V) B) rfl
+          ((Submodule.toBaseChange.toLinearEquiv ℂ B)
+            (z ⊗ₜ[ℚ] (a : B))) : Complexification V) ∈
+        rationalToComplexSubmodule (V := V) A
+      rw [LinearEquiv.ofSubmodules_apply]
+      change rationalToComplexLinearEquiv (V := V)
+          (((Submodule.toBaseChange.toLinearEquiv ℂ B) (z ⊗ₜ[ℚ] (a : B)) :
+            B.baseChange ℂ) : TensorProduct ℚ ℂ (Rationalification V)) ∈
+        rationalToComplexSubmodule (V := V) A
+      rw [Submodule.toBaseChange.toLinearEquiv_apply]
+      exact ⟨z ⊗ₜ[ℚ] ((a : B) : Rationalification V),
+        Submodule.tmul_mem_baseChange_of_mem z a.property, rfl⟩
+    · intro x y hx hy
+      simpa [map_add] using Submodule.add_mem (rationalToComplexSubmodule (V := V) A) hx hy
+  · intro hy
+    change (y : Complexification V) ∈ rationalToComplexSubmodule (V := V) A at hy
+    rcases hy with ⟨a, ha, hy⟩
+    rcases Submodule.toBaseChange_surjective' (A := ℂ) (p := A) ha with ⟨t, ht⟩
+    refine ⟨(TensorProduct.AlgebraTensorModule.lTensor ℂ ℂ
+        (((A.submoduleOf B).subtype).restrictScalars ℚ))
+        ((TensorProduct.AlgebraTensorModule.congr (LinearEquiv.refl ℂ ℂ)
+          (Submodule.submoduleOfEquivOfLe hAB).symm) t), ?_, ?_⟩
+    · exact ⟨_, rfl⟩
+    · apply Subtype.ext
+      change ((rationalToComplexSubmoduleEquiv (V := V) B)
+          ((TensorProduct.AlgebraTensorModule.lTensor ℂ ℂ
+            (((A.submoduleOf B).subtype).restrictScalars ℚ))
+            ((TensorProduct.AlgebraTensorModule.congr (LinearEquiv.refl ℂ ℂ)
+              (Submodule.submoduleOfEquivOfLe hAB).symm) t)) :
+          Complexification V) = y
+      rw [← hy]
+      rw [← ht]
+      refine TensorProduct.induction_on t ?hz₂ ?ht₂ ?ha₂
+      · simp [rationalToComplexSubmoduleEquiv]
+      · intro z a'
+        change ((rationalToComplexLinearEquiv (V := V)).ofSubmodules (B.baseChange ℂ)
+            (rationalToComplexSubmodule (V := V) B) rfl
+            ((Submodule.toBaseChange.toLinearEquiv ℂ B)
+              (z ⊗ₜ[ℚ] (⟨(a' : Rationalification V), hAB a'.property⟩ : B))) :
+            Complexification V) =
+          rationalToComplexLinearEquiv (V := V)
+            (((Submodule.toBaseChange.toLinearEquiv ℂ A) (z ⊗ₜ[ℚ] a') :
+              A.baseChange ℂ) : TensorProduct ℚ ℂ (Rationalification V))
+        rw [LinearEquiv.ofSubmodules_apply]
+        rw [Submodule.toBaseChange.toLinearEquiv_apply]
+        rw [Submodule.toBaseChange.toLinearEquiv_apply]
+        rw [Submodule.coe_toBaseChange_tmul]
+        rw [Submodule.coe_toBaseChange_tmul]
+      · intro x y hx hy
+        simpa [map_add] using congrArg₂ (fun u v => u + v) hx hy
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- Complexification commutes with the rational weight-graded quotient:
+`ℂ ⊗[ℚ] (W_{ℚ,k}/W_{ℚ,k-1}) ≃
+(W_{ℚ,k})_ℂ/(W_{ℚ,k-1})_ℂ`. -/
+noncomputable def gradedComplexEquiv
+    (WQ : ℤ → Submodule ℚ (Rationalification V)) (hWQ : Monotone WQ) (k : ℤ) :
+    ratComplexify (weightGradedRat (V := V) WQ k) ≃ₗ[ℂ]
+      weightGradedPiece (V := V) (fun k => rationalToComplexSubmodule (V := V) (WQ k)) k :=
+  let lower_le : WQ (k - 1) ≤ WQ k := hWQ (by omega)
+  TensorProduct.AlgebraTensorModule.tensorQuotientEquiv ℂ ℚ ℂ
+    ((WQ (k - 1)).submoduleOf (WQ k)) ≪≫ₗ
+    Submodule.Quotient.equiv
+      (LinearMap.range
+        (TensorProduct.AlgebraTensorModule.lTensor ℂ ℂ
+          ((((WQ (k - 1)).submoduleOf (WQ k)).subtype).restrictScalars ℚ)))
+      ((rationalToComplexSubmodule (V := V) (WQ (k - 1))).submoduleOf
+        (rationalToComplexSubmodule (V := V) (WQ k)))
+      (rationalToComplexSubmoduleEquiv (V := V) (WQ k))
+      (rationalToComplexSubmoduleEquiv_range_lTensor (V := V) lower_le)
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- The Hodge filtration induced on the complexification of the rational graded piece,
+transported from the complex quotient through `gradedComplexEquiv`. -/
+noncomputable def gradedF
+    (WQ : ℤ → Submodule ℚ (Rationalification V)) (hWQ : Monotone WQ)
+    (F : ℤ → Submodule ℂ (Complexification V)) (k p : ℤ) :
+    Submodule ℂ (ratComplexify (weightGradedRat (V := V) WQ k)) :=
+  (complexGradedF (V := V) (fun k => rationalToComplexSubmodule (V := V) (WQ k)) F k p).comap
+    (gradedComplexEquiv (V := V) WQ hWQ k).toLinearMap
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- The induced-purity condition on a mixed Hodge structure is stated on the
+complexification of the rational graded piece `grᵂ_k(W_ℚ)`. The induced filtration is
+bounded, decreasing, and `k`-opposed with respect to the canonical rational conjugation. -/
 noncomputable def gradedPure
-    (WC : ℤ → Submodule ℂ (Complexification V))
-    (hWC_conj : ∀ k, (WC k).map (latticeConj (V := V)) = WC k)
+    (WQ : ℤ → Submodule ℚ (Rationalification V)) (hWQ : Monotone WQ)
     (F : ℤ → Submodule ℂ (Complexification V)) (k : ℤ) : Prop :=
-  (∃ p, gradedF (V := V) WC F k p = ⊤) ∧
-    (∃ p, gradedF (V := V) WC F k p = ⊥) ∧
-      ∀ p, IsCompl (gradedF (V := V) WC F k p)
-        ((gradedF (V := V) WC F k (k + 1 - p)).map
-          (gradedConj (V := V) WC hWC_conj k))
+  (∃ p, gradedF (V := V) WQ hWQ F k p = ⊤) ∧
+    (∃ p, gradedF (V := V) WQ hWQ F k p = ⊥) ∧
+      Antitone (fun p => gradedF (V := V) WQ hWQ F k p) ∧
+        ∀ p, IsCompl (gradedF (V := V) WQ hWQ F k p)
+          ((gradedF (V := V) WQ hWQ F k (k + 1 - p)).map
+            (gradedConj (V := V) WQ k).toLinearMap)
 
 /-- **L2 -- mixed Hodge structure (schematic).** The primary lattice is again `V_ℤ`. The weight
 filtration is recorded rationally on `V_ℚ`; its complexification on `V_ℂ` is derived using
@@ -334,10 +529,9 @@ structure MixedHodgeStructure (V : Type*) [AddCommGroup V] [Module ℤ V] [Modul
   WQ_bot : ∃ k, WQ k = ⊥
   F : ℤ → Submodule ℂ (Complexification V)
   F_antitone : Antitone F
-  /-- On each graded weight piece `grᵂ_k = W_k/W_{k-1}`, the filtration induced by `F`
-  is a pure Hodge structure of weight `k`. -/
-  graded_pure : ∀ k, gradedPure (fun k => rationalToComplexSubmodule (WQ k))
-    (fun k => rationalToComplexSubmodule_conj (V := V) (WQ k)) F k
+  /-- On each rational graded weight piece `grᵂ_k = W_{ℚ,k}/W_{ℚ,k-1}`, the filtration
+  induced by `F` on its complexification is a pure Hodge structure of weight `k`. -/
+  graded_pure : ∀ k, gradedPure WQ WQ_monotone F k
 
 /-- The complexified weight filtration of a mixed Hodge structure. -/
 noncomputable def MixedHodgeStructure.WC

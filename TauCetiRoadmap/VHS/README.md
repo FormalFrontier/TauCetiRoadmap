@@ -146,15 +146,21 @@ the pinned Mathlib.
   is *derived*, and its monotonicity and conjugation-stability are **proved lemmas**
   (`rationalToComplexSubmodule_mono`, `…_conj`), not structure fields — so instances are
   correct-by-construction, not burdened with re-proving them. `graded_pure` is the **genuine
-  induced-purity axiom** (not a placeholder): the graded piece `grᵂ_k = W_k/W_{k-1}` is built as a
-  quotient module (`Submodule.submoduleOf`), `latticeConj` descends to it (semilinear `Submodule.mapQ` —
-  `gradedConj`), `F` induces a filtration on it (`mkQ` image — `gradedF`), and `graded_pure` requires
-  *that* induced filtration to be bounded and `k`-opposed with respect to `gradedConj` — structurally
-  identical to `HodgeStructure.opposed`. So an MHS really is one.
+  induced-purity axiom, stated rationally** (not a placeholder, and not merely the complex shadow): the
+  *rational* graded piece `grᵂ_k = W_{ℚ,k}/W_{ℚ,k-1}` is built as a `ℚ`-quotient (`weightGradedRat`),
+  its complexification `ℂ ⊗_ℚ grᵂ_k` (`ratComplexify`) carries the canonical rational conjugation
+  `ratConj` (bundled as a conjugate-linear **equivalence** `gradedConj`, involutivity proved), `F`
+  induces a filtration `gradedF` on it, and `graded_pure` requires that induced filtration to be
+  **bounded, antitone, and `k`-opposed** with respect to `gradedConj` — structurally identical to
+  `HodgeStructure` (`F_top`/`F_bot` + `F_antitone` + `opposed`). The complex weight quotient
+  `WC_k/WC_{k-1}` is **identified** with `ℂ ⊗_ℚ grᵂ_k` by a *proved* isomorphism `gradedComplexEquiv`
+  (complexification commutes with the quotient — `tensorQuotientEquiv` / right-exactness composed with
+  the per-level `ℂ ⊗_ℚ W ≃ WC` iso). So an MHS genuinely induces a pure *rational* Hodge structure on
+  each graded — the correct object, not just its complexification.
   *Milestone:* a morphism of MHS is **strict** for **both** filtrations:
   `range f ⊓ W'_k = f(W_k)` and `range f ⊓ F'^p = f(F^p)`. Because `graded_pure` now carries real
-  purity, the milestone's hypotheses are true (the earlier weight-only, weak-hypothesis version was a
-  false statement).
+  induced purity and morphisms record rational/complex compatibility, the target is Deligne strictness
+  for genuine MHS morphisms rather than for arbitrary filtered complex-linear maps.
   *Discharge:* Deligne's canonical `(p,q)`-bigrading of an MHS (the Deligne splitting) — every MHS
   morphism respects the bigrading, whence strictness for both filtrations. Requires the two-filtration
   / bigrading lemma. For the roadmap it suffices to establish the splitting *propositionally* (existence
@@ -163,12 +169,14 @@ the pinned Mathlib.
   quotient manipulations tractable. Deligne, *Théorie de Hodge II*, 1.2.10 & 2.3.5; Peters–Steenbrink
   Ch. 3.
   *Morphisms:* the milestone frames a morphism *unbundled* (the pair `fQ`/`fC` + compatibility
-  hypotheses) so the target is bundling-agnostic. The implementation should then bundle these into an
+  hypotheses) so the target is bundling-agnostic, but it still records the essential rational/complex
+  compatibility: `fC = rationalMapToComplex fQ`. The implementation should then bundle these into an
   `MHS.Hom` / category to carry the **abelian-category** structure — strictness is exactly what makes
   kernels and cokernels of MHS morphisms again MHS (with the induced filtrations).
 - **L3 — Period domains.**
-  *Definitions:* `HodgeType` (fixed Hodge numbers `h : ℤ → ℕ`, finite support), `PeriodDomain V n htype`
-  (a polarized HS of that type).
+  *Definitions:* `HodgeType` (fixed Hodge numbers `h : ℤ → ℕ`, finite support),
+  `PeriodDomain V n Qint htype` (a Hodge filtration for the **fixed** integral polarization form
+  `Qint`, with the prescribed type). The form is not allowed to vary with the point of the domain.
   *Milestone (seeded):* the Hodge numbers partition the dimension, `∑ᶠ p, h p = dim_ℂ V_ℂ` — the
   numerical shadow of L0, a genuine constraint on `HodgeType`.
   *Discharge:* from L0 (`DirectSum.IsInternal`) plus `hodge_numbers` (`finrank (piece p) = h p`), the
@@ -246,6 +254,6 @@ is grounded in Mathlib's base-change vocabulary throughout (`BilinForm.baseChang
 horizontality / Griffiths transversality is analytic and out of scope; its provable engine is the L5
 Schur lemma. The only remaining schematic placeholders are the **L4 analytic fields** (`holomorphic`,
 `griffiths_transversality`) — the genuinely out-of-scope complex-geometry inputs; the MHS `graded_pure`
-axiom is now fully encoded (real induced purity on `gr^W_k`). Elaborated green against `TauCetiRoadmap`'s
-pinned Mathlib (leanprover/lean4:v4.31.0-rc1); the milestone `example`s carry `sorry`, every definition
-is complete.*
+axiom is now fully encoded (real induced purity on `gr^W_k`). Elaborated green against the
+seiberg-witten toolchain (leanprover/lean4:v4.30.0); re-elaborate against `TauCetiRoadmap`'s pinned
+Mathlib when filing. The milestone `example`s carry `sorry`, every definition is complete.*
