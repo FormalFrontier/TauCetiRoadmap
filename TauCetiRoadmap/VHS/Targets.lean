@@ -303,13 +303,12 @@ theorem rationalMapToComplex_maps_WC {V' : Type*} [AddCommGroup V'] [Module ℤ 
       simpa [map_add] using Submodule.add_mem _ hx hy
   · simp [rationalMapToComplex]
 
-/-- A rational Hodge substructure of a pure Hodge structure: a `ℚ`-subspace of `V_ℚ`,
-its associated complexification inside `V_ℂ` derived using `Submodule.baseChange`,
-conjugation stability, and spanning by the Hodge pieces. -/
+/-- A rational Hodge substructure of a pure Hodge structure: a `ℚ`-subspace `WQ` of `V_ℚ` whose
+complexification is spanned by its Hodge pieces (`hodge_spanning`). Conjugation-stability of the
+complexification is automatic — it holds for *any* rational subspace (`rationalToComplexSubmodule_conj`)
+— so it is not carried as a field; `hodge_spanning` is the genuine sub-Hodge condition. -/
 structure RationalHodgeSubstructure {n : ℤ} (hs : HodgeStructure V n) where
   WQ : Submodule ℚ (Rationalification V)
-  conj_stable :
-    (rationalToComplexSubmodule WQ).map (latticeConj (V := V)) = rationalToComplexSubmodule WQ
   hodge_spanning : rationalToComplexSubmodule WQ =
     ⨆ p, rationalToComplexSubmodule WQ ⊓ hs.piece p
 
