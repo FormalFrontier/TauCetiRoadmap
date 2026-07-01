@@ -14,3 +14,4 @@ import TauCetiRoadmap.GeometricTopology.Targets
 import TauCetiRoadmap.Exchangeability.Targets
 import TauCetiRoadmap.ConformalMapping.Targets
 import TauCetiRoadmap.OrthogonalL2Bases.Targets
+import TauCetiRoadmap.VHS.Targets
