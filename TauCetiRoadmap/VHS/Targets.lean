@@ -203,6 +203,68 @@ example {n : ℤ} (hs : HodgeStructure V n) (pol : Polarization hs)
         (∀ v ∈ W.WC, ∀ w ∈ W'.WC, pol.Q v w = 0) :=
   sorry
 
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- The `k`th graded piece `grᵂ_k = W_k/W_{k-1}` of an increasing complex weight
+filtration. The lower step is viewed as a submodule of `W_k` via `Submodule.submoduleOf`. -/
+@[reducible]
+noncomputable def weightGradedPiece
+    (WC : ℤ → Submodule ℂ (Complexification V)) (k : ℤ) : Type _ :=
+  (WC k) ⧸ ((WC (k - 1)).submoduleOf (WC k))
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- Monotonicity supplies the inclusion `W_{k-1} ≤ W_k` behind the graded-piece
+quotient. -/
+theorem weightGraded_lower_le
+    {WC : ℤ → Submodule ℂ (Complexification V)} (hWC : Monotone WC) (k : ℤ) :
+    WC (k - 1) ≤ WC k := by
+  exact hWC (by omega)
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- Lattice conjugation induced on the graded piece `grᵂ_k`. It restricts to `W_k`
+and preserves `W_{k-1}`, so `Submodule.mapQ` descends the restricted semilinear map to
+the quotient. -/
+noncomputable def gradedConj
+    (WC : ℤ → Submodule ℂ (Complexification V))
+    (hWC_conj : ∀ k, (WC k).map (latticeConj (V := V)) = WC k) (k : ℤ) :
+    weightGradedPiece (V := V) WC k →ₛₗ[starRingEnd ℂ]
+      weightGradedPiece (V := V) WC k :=
+  let upperConj : WC k →ₛₗ[starRingEnd ℂ] WC k :=
+    ((latticeConj (V := V)).domRestrict (WC k)).codRestrict (WC k) (fun x => by
+      have hx : (latticeConj (V := V) (x : Complexification V)) ∈
+          (WC k).map (latticeConj (V := V)) :=
+        Submodule.mem_map_of_mem x.property
+      simpa [hWC_conj k] using hx)
+  ((WC (k - 1)).submoduleOf (WC k)).mapQ ((WC (k - 1)).submoduleOf (WC k))
+    upperConj (fun x hx => by
+      change (latticeConj (V := V) (x : Complexification V)) ∈ WC (k - 1)
+      have hx' : (latticeConj (V := V) (x : Complexification V)) ∈
+          (WC (k - 1)).map (latticeConj (V := V)) :=
+        Submodule.mem_map_of_mem hx
+      simpa [hWC_conj (k - 1)] using hx')
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- The Hodge filtration induced on `grᵂ_k`: image of `F^p ∩ W_k` under the quotient
+map `W_k → W_k/W_{k-1}`. -/
+noncomputable def gradedF
+    (WC : ℤ → Submodule ℂ (Complexification V))
+    (F : ℤ → Submodule ℂ (Complexification V)) (k p : ℤ) :
+    Submodule ℂ (weightGradedPiece (V := V) WC k) :=
+  ((F p ⊓ WC k).submoduleOf (WC k)).map
+    (((WC (k - 1)).submoduleOf (WC k)).mkQ)
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- The genuine induced-purity condition on a graded weight piece: the induced filtration is
+bounded and `k`-opposed with respect to the induced conjugation. -/
+noncomputable def gradedPure
+    (WC : ℤ → Submodule ℂ (Complexification V))
+    (hWC_conj : ∀ k, (WC k).map (latticeConj (V := V)) = WC k)
+    (F : ℤ → Submodule ℂ (Complexification V)) (k : ℤ) : Prop :=
+  (∃ p, gradedF (V := V) WC F k p = ⊤) ∧
+    (∃ p, gradedF (V := V) WC F k p = ⊥) ∧
+      ∀ p, IsCompl (gradedF (V := V) WC F k p)
+        ((gradedF (V := V) WC F k (k + 1 - p)).map
+          (gradedConj (V := V) WC hWC_conj k))
+
 /-- **L2 -- mixed Hodge structure (schematic).** The primary lattice is again `V_ℤ`. The weight
 filtration is recorded rationally on `V_ℚ`; its complexification on `V_ℂ` is derived using
 `Submodule.baseChange` and the tower cancellation equivalence. The Hodge filtration is a decreasing
@@ -217,11 +279,9 @@ structure MixedHodgeStructure (V : Type*) [AddCommGroup V] [Module ℤ V] [Modul
       rationalToComplexSubmodule (WQ k)
   F : ℤ → Submodule ℂ (Complexification V)
   F_antitone : Antitone F
-  /-- TODO(review): replace this placeholder by the induced pure Hodge structure on
-  `grᵂ_k = W_k/W_{k-1}`, using `Submodule.baseChange` for complexified rational weights,
-  `Submodule.mapQ` and quotient modules for `grᵂ_k`, and the induced Hodge filtration on that
-  quotient. -/
-  graded_pure : ∀ _ : ℤ, Prop
+  /-- On each graded weight piece `grᵂ_k = W_k/W_{k-1}`, the filtration induced by `F`
+  is a pure Hodge structure of weight `k`. -/
+  graded_pure : ∀ k, gradedPure (fun k => rationalToComplexSubmodule (WQ k)) WC_conj F k
 
 /-- The complexified weight filtration of a mixed Hodge structure. -/
 noncomputable def MixedHodgeStructure.WC
@@ -247,12 +307,17 @@ structure HodgeType where
   h : ℤ → ℕ
   finite_support : {p | h p ≠ 0}.Finite
 
-/-- **L3 -- period domain.** A point of the period domain is a polarized pure Hodge structure on the
-fixed lattice with the prescribed Hodge numbers. -/
+/-- **L3 -- period domain.** Following Griffiths, the lattice `V_ℤ`, the integral polarization form
+`Qint`, and the Hodge type are **fixed**; a *point* of the period domain is a Hodge filtration making
+`(V, Qint)` a polarized Hodge structure of that type. Only the filtration varies — so the symmetry
+group `G = Aut(V, Qint)` acts and `D` is the homogeneous space `G_ℝ/V` (open in a flag variety). The
+`pol_form` field pins the polarization to the fixed form. -/
 structure PeriodDomain (V : Type*) [AddCommGroup V] [Module ℤ V] [Module.Free ℤ V]
-    [Module.Finite ℤ V] (n : ℤ) (htype : HodgeType) where
+    [Module.Finite ℤ V] (n : ℤ) (Qint : LinearMap.BilinForm ℤ V) (htype : HodgeType) where
   hs : HodgeStructure V n
   pol : Polarization hs
+  /-- The point's polarization is the fixed form `Qint` -- the domain varies only the filtration. -/
+  pol_form : pol.Qint = Qint
   hodge_numbers : ∀ p : ℤ, Module.finrank ℂ (hs.piece p) = htype.h p
 
 /-- **L3 milestone -- Hodge numbers partition the dimension.** For any point of the period domain,
@@ -260,7 +325,8 @@ the prescribed Hodge numbers sum to the dimension of `V_ℂ` (the numerical shad
 decomposition; a genuine constraint on `HodgeType`). The deeper target -- openness of the period
 domain in its flag variety, and the weight-1 identification with the Siegel domain -- needs
 flag-variety topology and is described in the README (out of scope for this seed). -/
-example {n : ℤ} (htype : HodgeType) (D : PeriodDomain V n htype) :
+example {n : ℤ} (Qint : LinearMap.BilinForm ℤ V) (htype : HodgeType)
+    (D : PeriodDomain V n Qint htype) :
     ∑ᶠ p, (htype.h p : ℕ) = Module.finrank ℂ (Complexification V) := sorry
 
 omit [Module.Free ℤ V] [Module.Finite ℤ V] in

@@ -141,15 +141,18 @@ the pinned Mathlib.
   orthogonal-complement API and the L0 decomposition. Voisin I, §7.1.2; Peters–Steenbrink §2.
 - **L2 — Mixed Hodge structures; strictness (Deligne).**
   *Definitions:* `MixedHodgeStructure V` (`ℚ`-weight filtration `WQ` with derived complexification,
-  Hodge filtration `F`), morphisms compatible with `W`, `F`, `conj`.
+  Hodge filtration `F`), morphisms compatible with `W`, `F`, `conj`. Its `graded_pure` field is the
+  **genuine induced-purity axiom** (not a placeholder): the graded piece
+  `grᵂ_k = W_k/W_{k-1}` is built as a quotient module (`Submodule.submoduleOf`), `latticeConj` descends
+  to it (semilinear `Submodule.mapQ` — `gradedConj`), `F` induces a filtration on it (`mkQ` image —
+  `gradedF`), and `graded_pure` requires *that* induced filtration to be bounded and `k`-opposed with
+  respect to `gradedConj` — structurally identical to `HodgeStructure.opposed`. So an MHS really is one.
   *Milestone:* a morphism of MHS is **strict** for the weight filtration:
-  `range f ⊓ W'_k = f(W_k)` (and likewise for `F`).
+  `range f ⊓ W'_k = f(W_k)` (and likewise for `F`). Because `graded_pure` now carries real purity, the
+  milestone's hypotheses are true (the earlier weak version was a false statement).
   *Discharge:* Deligne's canonical `(p,q)`-bigrading of an MHS (the Deligne splitting) — every MHS
   morphism respects the bigrading, whence strictness for both filtrations. Requires the two-filtration
   / bigrading lemma. Deligne, *Théorie de Hodge II*, 1.2.10 & 2.3.5; Peters–Steenbrink Ch. 3.
-  *Debt:* the `graded_pure` field (the induced pure HS on `gr^W_k`) is a documented `TODO(review)` —
-  its full form needs quotient-lattice bookkeeping (`Submodule.mapQ`, quotient modules, the induced
-  filtration); the roadmap records the intended Mathlib path in-file.
 - **L3 — Period domains.**
   *Definitions:* `HodgeType` (fixed Hodge numbers `h : ℤ → ℕ`, finite support), `PeriodDomain V n htype`
   (a polarized HS of that type).
@@ -228,7 +231,8 @@ is grounded in Mathlib's base-change vocabulary throughout (`BilinForm.baseChang
 `cancelBaseChange`). **L4** contributes the honest monodromy facet plus a schematic
 `VariationOfHodgeStructure` seed — it has **no self-contained provable milestone**, because period-map
 horizontality / Griffiths transversality is analytic and out of scope; its provable engine is the L5
-Schur lemma. Remaining schematic debt is marked `TODO(review)` in-file (MHS `graded_pure`'s induced
-datum on `gr^W_k`; the L4 analytic placeholders). Elaborated green against `TauCetiRoadmap`'s pinned
-Mathlib (leanprover/lean4:v4.31.0-rc1); the milestone `example`s carry `sorry`, every definition is
-complete.*
+Schur lemma. The only remaining schematic placeholders are the **L4 analytic fields** (`holomorphic`,
+`griffiths_transversality`) — the genuinely out-of-scope complex-geometry inputs; the MHS `graded_pure`
+axiom is now fully encoded (real induced purity on `gr^W_k`). Elaborated green against `TauCetiRoadmap`'s
+pinned Mathlib (leanprover/lean4:v4.31.0-rc1); the milestone `example`s carry `sorry`, every definition
+is complete.*
