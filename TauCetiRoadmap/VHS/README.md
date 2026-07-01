@@ -141,8 +141,8 @@ the pinned Mathlib.
   orthogonal-complement API and the L0 decomposition. Voisin I, §7.1.2; Peters–Steenbrink §2.
 - **L2 — Mixed Hodge structures; strictness (Deligne).**
   *Definitions:* `MixedHodgeStructure V` — the `ℚ`-weight filtration `WQ` (monotone and **bounded**,
-  `WQ_top`/`WQ_bot`, mirroring `HodgeStructure`), the Hodge filtration `F`, and `graded_pure`; morphisms
-  compatible with `W`, `F`, `conj`. The complexified weight `WC_k := rationalToComplexSubmodule (WQ_k)`
+  `WQ_top`/`WQ_bot`), the Hodge filtration `F` (antitone and **bounded**, `F_top`/`F_bot`, mirroring
+  `HodgeStructure`), and `graded_pure`. The complexified weight `WC_k := rationalToComplexSubmodule (WQ_k)`
   is *derived*, and its monotonicity and conjugation-stability are **proved lemmas**
   (`rationalToComplexSubmodule_mono`, `…_conj`), not structure fields — so instances are
   correct-by-construction, not burdened with re-proving them. `graded_pure` is the **genuine
@@ -158,9 +158,11 @@ the pinned Mathlib.
   the per-level `ℂ ⊗_ℚ W ≃ WC` iso). So an MHS genuinely induces a pure *rational* Hodge structure on
   each graded — the correct object, not just its complexification.
   *Milestone:* a morphism of MHS is **strict** for **both** filtrations:
-  `range f ⊓ W'_k = f(W_k)` and `range f ⊓ F'^p = f(F^p)`. Because `graded_pure` now carries real
-  induced purity and morphisms record rational/complex compatibility, the target is Deligne strictness
-  for genuine MHS morphisms rather than for arbitrary filtered complex-linear maps.
+  `range f ⊓ W'_k = f(W_k)` and `range f ⊓ F'^p = f(F^p)`. The morphism is a **single rational map**
+  `fQ`; its complex action is the *derived* `fC := rationalMapToComplex fQ`, whose conjugation-equivariance
+  and `WC`-compatibility are **proved lemmas** (`rationalMapToComplex_conj`, `…_maps_WC`) rather than
+  hypotheses. So the target is Deligne strictness for a genuine rational MHS morphism, not for an
+  arbitrary pair of filtered maps.
   *Discharge:* Deligne's canonical `(p,q)`-bigrading of an MHS (the Deligne splitting) — every MHS
   morphism respects the bigrading, whence strictness for both filtrations. Requires the two-filtration
   / bigrading lemma. For the roadmap it suffices to establish the splitting *propositionally* (existence
@@ -168,9 +170,8 @@ the pinned Mathlib.
   elements through `gradedConj`/`gradedF` (as with `Polarization.Q_tmul`) will be wanted to keep the
   quotient manipulations tractable. Deligne, *Théorie de Hodge II*, 1.2.10 & 2.3.5; Peters–Steenbrink
   Ch. 3.
-  *Morphisms:* the milestone frames a morphism *unbundled* (the pair `fQ`/`fC` + compatibility
-  hypotheses) so the target is bundling-agnostic, but it still records the essential rational/complex
-  compatibility: `fC = rationalMapToComplex fQ`. The implementation should then bundle these into an
+  *Morphisms:* the milestone takes the morphism as a single unbundled rational map `fQ` (complex action
+  derived), so the target is bundling-agnostic. The implementation should then bundle it into an
   `MHS.Hom` / category to carry the **abelian-category** structure — strictness is exactly what makes
   kernels and cokernels of MHS morphisms again MHS (with the induced filtrations).
 - **L3 — Period domains.**
@@ -254,6 +255,7 @@ is grounded in Mathlib's base-change vocabulary throughout (`BilinForm.baseChang
 horizontality / Griffiths transversality is analytic and out of scope; its provable engine is the L5
 Schur lemma. The only remaining schematic placeholders are the **L4 analytic fields** (`holomorphic`,
 `griffiths_transversality`) — the genuinely out-of-scope complex-geometry inputs; the MHS `graded_pure`
-axiom is now fully encoded (real induced purity on `gr^W_k`). Elaborated green against the
-seiberg-witten toolchain (leanprover/lean4:v4.30.0); re-elaborate against `TauCetiRoadmap`'s pinned
-Mathlib when filing. The milestone `example`s carry `sorry`, every definition is complete.*
+axiom is now fully encoded (real induced purity on the rational `gr^W_k`). Elaborated green against
+`TauCetiRoadmap`'s pinned Mathlib (leanprover/lean4:v4.31.0-rc1), axiom-clean (only `propext`,
+`Classical.choice`, `Quot.sound`); the milestone `example`s carry `sorry`, every definition is
+complete.*

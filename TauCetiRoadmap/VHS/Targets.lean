@@ -231,6 +231,78 @@ theorem rationalToComplexSubmodule_conj (W : Submodule ℚ (Rationalification V)
     refine ⟨latticeConj (V := V) x, hclosed x hx, ?_⟩
     exact latticeConj_involutive (V := V) x
 
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- Lattice conjugation on `V_ℂ` matches rational conjugation before cancelling the
+intermediate `ℚ`-base change. -/
+theorem rationalToComplexLinearEquiv_conj_tmul (z : ℂ) (x : Rationalification V) :
+    latticeConj (V := V) (rationalToComplexLinearEquiv (V := V) (z ⊗ₜ[ℚ] x)) =
+      rationalToComplexLinearEquiv (V := V) ((starRingEnd ℂ z) ⊗ₜ[ℚ] x) := by
+  refine TensorProduct.induction_on x ?hz ?ht ?ha
+  · simp
+  · intro q v
+    simp [rationalToComplexLinearEquiv, TensorProduct.AlgebraTensorModule.cancelBaseChange_tmul,
+      Algebra.smul_def]
+  · intro x y hx hy
+    simp [TensorProduct.tmul_add, map_add, hx, hy]
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- The complexification of a rational linear map, transported from
+`ℂ ⊗[ℚ] V_ℚ` to `V_ℂ` by the tower cancellation equivalence. -/
+noncomputable def rationalMapToComplex {V' : Type*} [AddCommGroup V'] [Module ℤ V']
+    (f : Rationalification V →ₗ[ℚ] Rationalification V') :
+    Complexification V →ₗ[ℂ] Complexification V' :=
+  (rationalToComplexLinearEquiv (V := V')).toLinearMap ∘ₗ
+    f.baseChange ℂ ∘ₗ
+      (rationalToComplexLinearEquiv (V := V)).symm.toLinearMap
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- On pure lattice tensors, `rationalMapToComplex` is the scalar extension of the
+underlying rational map. -/
+@[simp]
+theorem rationalMapToComplex_tmul {V' : Type*} [AddCommGroup V'] [Module ℤ V']
+    (f : Rationalification V →ₗ[ℚ] Rationalification V') (z : ℂ) (v : V) :
+    rationalMapToComplex (V := V) f (z ⊗ₜ[ℤ] v) =
+      rationalToComplexLinearEquiv (V := V') (z ⊗ₜ[ℚ] f (1 ⊗ₜ[ℤ] v)) := by
+  simp [rationalMapToComplex, rationalToComplexLinearEquiv]
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- The complexification of a rational map commutes with lattice-induced conjugation. -/
+theorem rationalMapToComplex_conj {V' : Type*} [AddCommGroup V'] [Module ℤ V']
+    (f : Rationalification V →ₗ[ℚ] Rationalification V') (x : Complexification V) :
+    rationalMapToComplex (V := V) f (latticeConj (V := V) x) =
+      latticeConj (V := V') (rationalMapToComplex (V := V) f x) := by
+  refine TensorProduct.induction_on x ?hz ?ht ?ha
+  · simp
+  · intro z v
+    rw [latticeConj_tmul]
+    rw [rationalMapToComplex_tmul, rationalMapToComplex_tmul]
+    rw [rationalToComplexLinearEquiv_conj_tmul]
+  · intro x y hx hy
+    simp [map_add, hx, hy]
+
+omit [Module.Free ℤ V] [Module.Finite ℤ V] in
+/-- A rational map carrying one rational weight step into another carries the associated
+complexified subspace into the associated complexified subspace. -/
+theorem rationalMapToComplex_maps_WC {V' : Type*} [AddCommGroup V'] [Module ℤ V']
+    (f : Rationalification V →ₗ[ℚ] Rationalification V')
+    {W : Submodule ℚ (Rationalification V)}
+    {W' : Submodule ℚ (Rationalification V')} (hW : W.map f ≤ W') :
+    (rationalToComplexSubmodule (V := V) W).map (rationalMapToComplex (V := V) f) ≤
+      rationalToComplexSubmodule (V := V') W' := by
+  rintro y ⟨x, hx, rfl⟩
+  rcases hx with ⟨t, ht, rfl⟩
+  refine ⟨f.baseChange ℂ t, ?_, ?_⟩
+  · rw [Submodule.baseChange] at ht ⊢
+    rcases ht with ⟨s, rfl⟩
+    refine TensorProduct.induction_on s ?hz ?ht ?ha
+    · simp
+    · intro z w
+      rw [LinearMap.baseChange_tmul]
+      exact ⟨z ⊗ₜ[ℚ] (⟨f w, hW ⟨w, w.property, rfl⟩⟩ : W'), by simp⟩
+    · intro x y hx hy
+      simpa [map_add] using Submodule.add_mem _ hx hy
+  · simp [rationalMapToComplex]
+
 /-- A rational Hodge substructure of a pure Hodge structure: a `ℚ`-subspace of `V_ℚ`,
 its associated complexification inside `V_ℂ` derived using `Submodule.baseChange`,
 conjugation stability, and spanning by the Hodge pieces. -/
@@ -529,6 +601,10 @@ structure MixedHodgeStructure (V : Type*) [AddCommGroup V] [Module ℤ V] [Modul
   WQ_bot : ∃ k, WQ k = ⊥
   F : ℤ → Submodule ℂ (Complexification V)
   F_antitone : Antitone F
+  /-- The Hodge filtration is exhaustive: `F^p = ⊤` for `p ≪ 0`. -/
+  F_top : ∃ p, F p = ⊤
+  /-- The Hodge filtration is separated: `F^p = ⊥` for `p ≫ 0`. -/
+  F_bot : ∃ p, F p = ⊥
   /-- On each rational graded weight piece `grᵂ_k = W_{ℚ,k}/W_{ℚ,k-1}`, the filtration
   induced by `F` on its complexification is a pure Hodge structure of weight `k`. -/
   graded_pure : ∀ k, gradedPure WQ WQ_monotone F k
@@ -538,20 +614,19 @@ noncomputable def MixedHodgeStructure.WC
     (mhs : MixedHodgeStructure V) (k : ℤ) : Submodule ℂ (Complexification V) :=
   rationalToComplexSubmodule (mhs.WQ k)
 
-/-- **L2 milestone -- strictness (Deligne).** A morphism of mixed Hodge structures is
-**strict** for both the weight and Hodge filtrations: a complex-linear map compatible with the
-rational and complex weight filtrations, the Hodge filtration, and conjugation satisfies
-`range f ⊓ W'_k = f(W_k)` and `range f ⊓ F'^p = f(F^p)`. -/
+/-- **L2 milestone -- strictness (Deligne).** A morphism of mixed Hodge structures is a single
+rational map whose complexification acts on `V_ℂ`; if it is compatible with the rational weight
+filtration and the Hodge filtration, it is **strict** for both filtrations:
+`range f_ℂ ⊓ W'_k = f_ℂ(W_k)` and `range f_ℂ ⊓ F'^p = f_ℂ(F^p)`. -/
 example {V' : Type*} [AddCommGroup V'] [Module ℤ V'] [Module.Free ℤ V'] [Module.Finite ℤ V']
     (mhs : MixedHodgeStructure V) (mhs' : MixedHodgeStructure V')
     (fQ : Rationalification V →ₗ[ℚ] Rationalification V')
-    (fC : Complexification V →ₗ[ℂ] Complexification V')
-    (_hWQ : ∀ k, (mhs.WQ k).map fQ ≤ mhs'.WQ k)
-    (_hWC : ∀ k, (mhs.WC k).map fC ≤ mhs'.WC k)
-    (_hF : ∀ p, (mhs.F p).map fC ≤ mhs'.F p)
-    (_hconj : ∀ v, fC (latticeConj (V := V) v) = latticeConj (V := V') (fC v)) :
-    (∀ k, LinearMap.range fC ⊓ mhs'.WC k = (mhs.WC k).map fC) ∧
-      (∀ p, LinearMap.range fC ⊓ mhs'.F p = (mhs.F p).map fC) := sorry
+    (hWQ : ∀ k, (mhs.WQ k).map fQ ≤ mhs'.WQ k)
+    (_hF : ∀ p, (mhs.F p).map (rationalMapToComplex fQ) ≤ mhs'.F p) :
+    (∀ k, LinearMap.range (rationalMapToComplex fQ) ⊓ mhs'.WC k =
+        (mhs.WC k).map (rationalMapToComplex fQ)) ∧
+      (∀ p, LinearMap.range (rationalMapToComplex fQ) ⊓ mhs'.F p =
+        (mhs.F p).map (rationalMapToComplex fQ)) := sorry
 
 /-- Fixed Hodge numbers for a period-domain target. -/
 structure HodgeType where
