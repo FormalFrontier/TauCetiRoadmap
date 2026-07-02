@@ -3,37 +3,31 @@ import Mathlib
 /-!
 # Exchangeability and de Finetti: target signatures
 
-The narrative roadmap, the library spine, the layer-by-layer build plan (Layers 0–8), the
-worked examples, and the references are in `README.md`.
+**`README.md` is the definitive roadmap document**: the narrative plan, the library spine,
+the layer-by-layer build (Layers 0–8), the worked examples, and the references all live
+there. This file is **not** the roadmap and is **not exhaustive**: it records suggested Lean
+forms for *particular* milestones, as their types become expressible, so that contributors
+and reviewers converge on names and signatures. Discharging every statement here neither
+finishes a layer nor the roadmap; what the area asks for is what `README.md` says.
 
-This file holds the **Layer 0** target signatures: the core symmetry notions (sequence
-laws, finite and full exchangeability, contractability), the directing-measure object
-(`ConditionallyIID`, with `ν : Ω → ProbabilityMeasure α`), path-space data (`pathLaw`,
-`prefixProj`, `shift`), finite-dimensional marginal uniqueness (an ℕ-prefix wrapper over
-Mathlib's `FiniteDimensionalLaws`), and the easy bridges among the symmetry classes; the
-implication lattice and the adjacent-transposition and strictly-increasing-map
-characterizations are described in `README.md`. These elaborate
-against the pinned Mathlib and are stated with `sorry` (allowed in this human-owned roadmap
-library).
+This file currently holds suggested forms for: **Layer 0** (the core symmetry notions,
+landed in `TauCeti/Probability/Exchangeability/`), **Layer 1** (the random product kernel
+and the common de Finetti ending), **Layer 2** (process tails, the shift-invariant and
+exchangeable σ-algebras, Hewitt–Savage), **Layer 4** (the Lévy downward theorem), and the
+**Layer 6 summit** (de Finetti and the Ryll-Nardzewski equivalence, expressible since
+Layer 0). These elaborate against the pinned Mathlib and are stated with `sorry` (allowed
+in this human-owned roadmap library).
 
-Layer 0 needs only Mathlib, not any not-yet-chosen Tau Ceti API. Later layers add their
-milestones here as their types become expressible:
+Later layers add suggested forms here as their types become expressible:
 
-* Layer 1 (product kernels, conditional independence, mixtures): consume Mathlib's
-  cylinder/π-system facts (`generateFrom_pi`, `generateFrom_squareCylinders`); build the
-  random product-kernel measurability and the common ending
-  `conditional_iid_from_directing_measure`.
-* Layer 2 (process tails and path-space dynamics): `tailFamily`, `tailProcess`, and the
-  shift-invariant σ-algebra.
 * Layer 3 (L² averaging and the standard-Borel de Finetti route, with the real-valued L²
   convergence theorem as the intermediate analytic step): `deFinetti_viaL2`.
-* Layer 4 (reverse martingales and conditional-expectation limits): `condExp_tendsto_iInf`
-  for antitone filtrations.
 * Layer 5 (Koopman operators and invariant σ-algebras): the positive/unital Markov-operator
   API, multiplicativity for deterministic Koopman operators, and `deFinetti_viaKoopman`.
-* Layer 6 (directing measures and the de Finetti representation): the default `deFinetti`,
-  `deFinetti_RyllNardzewski_equivalence`, the directing-measure API (a.e. uniqueness, the
-  factorization identity), and the empirical-measure and mixture forms.
+* Layer 6 (directing measures and the de Finetti representation, beyond the summit shapes
+  below): the directing-measure API (a.e. uniqueness, the factorization identity), and the
+  empirical-measure and mixture forms (the latter need the infinite product measure and the
+  weak topology on `ProbabilityMeasure α`).
 * Layer 8 (generalized exchangeability and representation theorems): finite de Finetti bounds,
   other countable index types, ergodic decomposition, Markov exchangeability, and
   Aldous–Hoover.
@@ -44,7 +38,7 @@ namespaces, but the statements below pin the intended early milestones and depen
 
 noncomputable section
 
-open MeasureTheory
+open MeasureTheory Filter Topology
 
 namespace TauCetiRoadmap.Exchangeability
 
@@ -130,6 +124,119 @@ example (hX : ∀ i, Measurable (X i)) (h : ConditionallyIID μ X) : Exchangeabl
 from symmetry to the Koopman lane). -/
 example [IsProbabilityMeasure μ] (hX : ∀ i, Measurable (X i)) (h : FullyExchangeable μ X) :
     MeasurePreserving (shift α) (pathLaw μ X) (pathLaw μ X) := by
+  sorry
+
+/-! ## Layer 1: product kernels and the common de Finetti ending
+
+Layer 0 landed in `TauCeti/Probability/Exchangeability/`; per `README.md`, Layer 1 builds
+only the de Finetti-facing adapters over Mathlib's cylinder/π-system infrastructure, plus
+the common ending every proof route calls last.
+-/
+
+/-- **Layer 1, random product-kernel measurability.** The finite product of a measurable
+random probability measure is measurable into `Measure (Fin m → α)`, the measurability
+input `Measure.bind` needs in every mixture identity. -/
+example (ν : Ω → ProbabilityMeasure α) (hν : Measurable ν) (m : ℕ) :
+    Measurable fun ω => (ProbabilityMeasure.pi fun _ : Fin m => ν ω).toMeasure := by
+  sorry
+
+/-- **Layer 1, the common de Finetti ending.** A measurable random probability measure whose
+mixtures match the finite-dimensional laws on measurable rectangles is a directing measure:
+rectangle agreement upgrades to the full `ConditionallyIID` factorization by the π-system
+argument. Shared by the L², Koopman, and martingale routes. -/
+example [IsProbabilityMeasure μ] (hX : ∀ i, Measurable (X i))
+    (ν : Ω → ProbabilityMeasure α) (hν : Measurable ν)
+    (h : ∀ (m : ℕ) (k : Fin m → ℕ), Function.Injective k →
+      ∀ B : Fin m → Set α, (∀ i, MeasurableSet (B i)) →
+        μ.map (fun ω => fun i : Fin m => X (k i) ω) (Set.univ.pi B) =
+          μ.bind (fun ω => (ProbabilityMeasure.pi fun _ : Fin m => ν ω).toMeasure)
+            (Set.univ.pi B)) :
+    ConditionallyIID μ X := by
+  sorry
+
+/-! ## Layer 2: process tails, path-space σ-algebras, and Hewitt–Savage -/
+
+/-- **Layer 2, the σ-algebra of the process from time `n` on**: `σ(X i : i ≥ n)`. -/
+@[reducible] def tailFamily (X : ℕ → Ω → α) (n : ℕ) : MeasurableSpace Ω :=
+  ⨆ i ≥ n, MeasurableSpace.comap (X i) inferInstance
+
+/-- **Layer 2, the tail σ-algebra of the process**: `⋂ n, σ(X i : i ≥ n)`. -/
+@[reducible] def tailProcess (X : ℕ → Ω → α) : MeasurableSpace Ω :=
+  ⨅ n, tailFamily X n
+
+/-- **Layer 2, the shift-invariant σ-algebra** on path space. The strictly shift-invariant
+measurable sets already form a σ-algebra; `generateFrom` just packages them. -/
+@[reducible] def shiftInvariantSigma (α : Type*) [MeasurableSpace α] : MeasurableSpace (ℕ → α) :=
+  MeasurableSpace.generateFrom {s | MeasurableSet s ∧ shift α ⁻¹' s = s}
+
+/-- **Layer 2, the exchangeable (symmetric) σ-algebra** on path space: measurable sets
+invariant under every finitely supported permutation of the coordinates. -/
+@[reducible] def exchangeableSigma (α : Type*) [MeasurableSpace α] : MeasurableSpace (ℕ → α) :=
+  MeasurableSpace.generateFrom
+    {s | MeasurableSet s ∧
+      ∀ π : Equiv.Perm ℕ, {i | π i ≠ i}.Finite →
+        (fun x : ℕ → α => fun i => x (π i)) ⁻¹' s = s}
+
+/-- **Layer 2, tail-family antitonicity.** -/
+example (X : ℕ → Ω → α) : Antitone (tailFamily X) := by
+  sorry
+
+/-- **Layer 2, the process tail is a sub-σ-algebra** for a measurable process. -/
+example (hX : ∀ i, Measurable (X i)) :
+    tailProcess X ≤ (inferInstance : MeasurableSpace Ω) := by
+  sorry
+
+/-- **Layer 2, the path-space σ-algebras are sub-σ-algebras.** (Do not silently identify
+them: for one-sided sequences the tail, shift-invariant, and exchangeable σ-algebras are
+related through invariance, almost invariance, and completions; see `README.md`.) -/
+example : shiftInvariantSigma α ≤ (inferInstance : MeasurableSpace (ℕ → α)) ∧
+    exchangeableSigma α ≤ (inferInstance : MeasurableSpace (ℕ → α)) := by
+  sorry
+
+/-- **Layer 2, the Hewitt–Savage zero-one law.** For an i.i.d. sequence the exchangeable
+σ-algebra is trivial. Stronger than Kolmogorov's tail 0-1 law (which needs only
+independence); the identically-distributed hypothesis is essential. Input to the Layer 6
+extreme-point corollary. -/
+example [IsProbabilityMeasure μ] (hX : ∀ i, Measurable (X i))
+    (h_indep : ProbabilityTheory.iIndepFun X μ)
+    (h_ident : ∀ i, ProbabilityTheory.IdentDistrib (X i) (X 0) μ μ)
+    {s : Set (ℕ → α)} (hs : MeasurableSet[exchangeableSigma α] s) :
+    pathLaw μ X s = 0 ∨ pathLaw μ X s = 1 := by
+  sorry
+
+/-! ## Layer 4: reverse martingales -/
+
+/-- **Layer 4, the Lévy downward theorem** along an antitone filtration. Independent of
+exchangeability: consume Mathlib's upcrossing API and build only the reversal, the
+antitone adapter, and the `⨅ n, 𝔽 n` identification; the martingale route consumes this.
+The L¹ and Lᵖ convergence forms are follow-up Layer 4 targets. -/
+example [IsProbabilityMeasure μ] {𝔽 : ℕ → MeasurableSpace Ω}
+    (h_filtration : Antitone 𝔽) (h_le : ∀ n, 𝔽 n ≤ (inferInstance : MeasurableSpace Ω))
+    (f : Ω → ℝ) (h_f_int : Integrable f μ) :
+    ∀ᵐ ω ∂μ,
+      Tendsto (fun n => (μ[f|𝔽 n]) ω) atTop (𝓝 ((μ[f|⨅ n, 𝔽 n]) ω)) := by
+  sorry
+
+/-! ## The summit (Layer 6): de Finetti and Ryll-Nardzewski
+
+Expressible since Layer 0, so the suggested forms are pinned now; the proof routes and the
+directing-measure API (Layers 3–6 in `README.md`) land in between. The unsuffixed public
+theorem should be the reverse-martingale route.
+-/
+
+/-- **Layer 6 summit, de Finetti's theorem** on a standard Borel state space: an
+exchangeable sequence is conditionally i.i.d. -/
+example [IsProbabilityMeasure μ] [StandardBorelSpace α] [Nonempty α]
+    (hX : ∀ i, Measurable (X i)) (h_exch : Exchangeable μ X) :
+    ConditionallyIID μ X := by
+  sorry
+
+/-- **Layer 6 summit, the de Finetti–Ryll-Nardzewski equivalence**:
+`contractable ↔ exchangeable ↔ conditionally i.i.d.` for sequences on a standard Borel
+state space. -/
+example [IsProbabilityMeasure μ] [StandardBorelSpace α] [Nonempty α]
+    (hX : ∀ i, Measurable (X i)) :
+    Contractable μ X ↔ Exchangeable μ X ∧ ConditionallyIID μ X := by
   sorry
 
 end TauCetiRoadmap.Exchangeability
