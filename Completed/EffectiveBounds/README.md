@@ -1,6 +1,7 @@
 # Roadmap: effective arithmetic bounds and geometry of numbers
 
-**Status: COMPLETED (2026-07-02).** Every stated target has landed, sorry-free, in
+**Status: declared complete by the maintainers (2026-07-02).** The library this roadmap
+asked for has been built: the whole spine below has landed, sorry-free, in
 [TauCeti](https://github.com/TauCetiProject/TauCeti): the Layer-1 bounds
 (`abs_discr_le_of_basis_isIntegral`, `classNumber_le_bound`, `units_sq_index_le`),
 the explicit ideal count (`card_ideal_absNorm_le`), and the Layer-2 summit, the

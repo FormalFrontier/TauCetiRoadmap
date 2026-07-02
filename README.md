@@ -27,7 +27,8 @@ industry groups.
 
 ## Completed roadmaps
 
-Roadmaps whose targets have all landed in TauCeti are archived under
+Roadmaps the maintainers have declared complete — a judgment against the roadmap's
+`README.md`, the definitive document — are archived under
 [`Completed/`](Completed/README.md), outside the active list above.
 
 - [Effective arithmetic bounds and geometry of numbers](Completed/EffectiveBounds/README.md)
