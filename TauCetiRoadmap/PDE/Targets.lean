@@ -3,6 +3,11 @@ import Mathlib
 /-!
 # Partial differential equations: target signatures
 
+**This file is not the roadmap and is not exhaustive.** The definitive document is
+`README.md`. The statements here suggest Lean forms for particular milestones, so that
+contributors and reviewers converge on names and signatures; discharging all of them
+finishes neither a layer nor the roadmap.
+
 The narrative roadmap, the build lanes (A–F), and the acceptance criteria are in
 `README.md`. Mathlib already carries a substantial prerequisite stack: distributions and
 test functions, the Schwartz space, the Fourier transform, convolution and mollifiers,

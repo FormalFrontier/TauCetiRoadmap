@@ -3,6 +3,11 @@ import Mathlib
 /-!
 # Combinatorial Heegaard Floer and grid homology: target signatures
 
+**This file is not the roadmap and is not exhaustive.** The definitive document is
+`README.md`. The statements here suggest Lean forms for particular milestones, so that
+contributors and reviewers converge on names and signatures; discharging all of them
+finishes neither a layer nor the roadmap.
+
 The narrative roadmap is in `README.md`: the combinatorial bodies of theory that are
 formalizable now — grid homology (Lane G), bigraded and filtered homological algebra
 (Lane ALG), knot-theory reconciliation (Lane K), lattice homology (Lane L), and the

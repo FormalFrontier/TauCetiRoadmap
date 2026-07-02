@@ -3,6 +3,11 @@ import Mathlib
 /-!
 # Jacobian challenge (AG version): target signatures
 
+**This file is not the roadmap and is not exhaustive.** The definitive document is
+`README.md`. The statements here suggest Lean forms for particular milestones, so that
+contributors and reviewers converge on names and signatures; discharging all of them
+finishes neither a layer nor the roadmap.
+
 The narrative roadmap, the prerequisite tower (Layers A–E), and the acceptance
 criteria are in `README.md`. Almost none of the prerequisites are in Mathlib; the tower
 is built in `TauCeti/AlgebraicGeometry/`.

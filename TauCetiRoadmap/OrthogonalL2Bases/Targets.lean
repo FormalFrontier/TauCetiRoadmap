@@ -7,6 +7,11 @@ import Mathlib
 /-!
 # Targets — weighted orthogonal L² bases (`OrthogonalL2Bases`)
 
+**This file is not the roadmap and is not exhaustive.** The definitive document is
+`README.md`. The statements here suggest Lean forms for particular milestones, so that
+contributors and reviewers converge on names and signatures; discharging all of them
+finishes neither a layer nor the roadmap.
+
 Representative `sorry`-milestones for the `OrthogonalL2Bases` roadmap (full narrative and the
 complete API in `README.md`). These state the **weight↔measure-isometry enhancement** — the small
 addition that gives every family's basis in *both* normalizations — on top of the existing layers:

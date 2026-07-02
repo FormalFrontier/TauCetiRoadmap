@@ -2,8 +2,12 @@
 
 The human-controlled roadmaps for [Tau Ceti](https://github.com/TauCetiProject/TauCeti), an
 AIs-welcome Lean 4 library downstream of Mathlib. Humans steer the project from here: each
-roadmap is markdown plus Lean target signatures (with `sorry`, which is allowed in this repo
-because these are goals, not proofs). The AI-authored mathematics that discharges them lives
+roadmap is a markdown `README.md`, the definitive specification of its area, usually with
+suggested Lean target signatures in `Targets.lean` (with `sorry`, which is allowed in this
+repo because these are goals, not proofs). `Targets.lean` is never exhaustive: it pins names
+and signatures for particular milestones so contributors and reviewers converge, and a
+roadmap is finished only when the maintainers judge its `README.md` discharged, never
+because everything in its `Targets.lean` has landed. The AI-authored mathematics lives
 in the code repo; review machinery lives in
 [TauCetiReview](https://github.com/TauCetiProject/TauCetiReview).
 
@@ -67,7 +71,8 @@ reviewers, can act on it without guessing.
 
 - **Write Lean code.** It's really helpful to prototype signatures, particularly for structures,
   classes, and definitions, by writing Lean code, either embedded in markdown or in associated
-  Lean files using `sorry`.
+  Lean files using `sorry`. The prototypes are aids, not the specification: the markdown stays
+  definitive, and `Targets.lean` is read as suggested forms, never as an exhaustive checklist.
 
 - **Pin conventions.** It's essential that you decide conventions ahead of time, or implementors
   will make bad decisions.

@@ -3,6 +3,11 @@ import Mathlib
 /-!
 # Conformal mapping and geometric function theory: target signatures
 
+**This file is not the roadmap and is not exhaustive.** The definitive document is
+`README.md`. The statements here suggest Lean forms for particular milestones, so that
+contributors and reviewers converge on names and signatures; discharging all of them
+finishes neither a layer nor the roadmap.
+
 The narrative roadmap (layers, proof routes, generality bar, references, downstream uses)
 is in `README.md`. Mathlib has the Cauchy foundations — open mapping
 (`Complex.AnalyticOnNhd.is_constant_or_isOpenMap`), maximum modulus (`Analysis/Complex/AbsMax`),

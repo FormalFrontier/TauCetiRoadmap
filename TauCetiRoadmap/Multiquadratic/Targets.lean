@@ -3,6 +3,11 @@ import Mathlib
 /-!
 # Multiquadratic fields and genus theory: target signatures
 
+**This file is not the roadmap and is not exhaustive.** The definitive document is
+`README.md`. The statements here suggest Lean forms for particular milestones, so that
+contributors and reviewers converge on names and signatures; discharging all of them
+finishes neither a layer nor the roadmap.
+
 The narrative roadmap (the layer-by-layer build plan Layers 0–3, the worked examples, and
 the references) is in `README.md`. Mathlib has quadratic fields, Kummer theory, quadratic
 reciprocity, and the class group, but nothing on multiquadratic extensions

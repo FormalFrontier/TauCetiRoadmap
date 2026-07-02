@@ -3,6 +3,11 @@ import Mathlib
 /-!
 # Geometric topology and the Kirby-list problems: target signatures
 
+**This file is not the roadmap and is not exhaustive.** The definitive document is
+`README.md`. The statements here suggest Lean forms for particular milestones, so that
+contributors and reviewers converge on names and signatures; discharging all of them
+finishes neither a layer nor the roadmap.
+
 The narrative roadmap is in `README.md`: eleven layers of differential and geometric
 topology built bottom-up from current Mathlib (the manifold buildout and structure
 groups; locally flat embeddings; diffeomorphism-group topologies; knot theory; Dehn

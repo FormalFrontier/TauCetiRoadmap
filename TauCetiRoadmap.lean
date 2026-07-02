@@ -1,7 +1,8 @@
 -- Human-owned root of the roadmap target signatures.
 --
--- The narrative roadmaps live in the per-topic `README.md` files; the Lean
--- `Targets.lean` files state the goals (with `sorry`, which is allowed here).
+-- The per-topic `README.md` files are the definitive roadmaps. The Lean `Targets.lean`
+-- files suggest declaration forms for particular milestones (with `sorry`, which is
+-- allowed here); they are not exhaustive, and discharging one does not finish its roadmap.
 import TauCetiRoadmap.EffectiveBounds.Targets
 import TauCetiRoadmap.Multiquadratic.Targets
 import TauCetiRoadmap.UniversalCovers.Targets
