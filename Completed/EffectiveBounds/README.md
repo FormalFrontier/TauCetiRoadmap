@@ -1,5 +1,16 @@
 # Roadmap: effective arithmetic bounds and geometry of numbers
 
+**Status: declared complete by the maintainers (2026-07-02).** The library this roadmap
+asked for has been built: the whole spine below has landed, sorry-free, in
+[TauCeti](https://github.com/TauCetiProject/TauCeti): the Layer-1 bounds
+(`abs_discr_le_of_basis_isIntegral`, `classNumber_le_bound`, `units_sq_index_le`),
+the explicit ideal count (`card_ideal_absNorm_le`), and the Layer-2 summit, the
+effective Hermite–Minkowski count
+(`ncard_setOf_finiteDimensional_abs_discr_le_le`), all under
+`TauCeti/NumberTheory/EffectiveBounds/`, with the geometry-of-numbers engine under
+`TauCeti/NumberTheory/GeometryOfNumbers/`. This roadmap is archived and no longer
+offered to contributors.
+
 Mathlib has Minkowski's convex-body theorem, the canonical embedding, the Minkowski
 bound, and even the qualitative summit (Minkowski's lower bound on the discriminant
 `NumberField.abs_discr_ge` and **Hermite's finiteness theorem**

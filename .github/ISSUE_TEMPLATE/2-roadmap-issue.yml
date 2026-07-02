@@ -16,7 +16,6 @@ body:
       options:
         - CombinatorialHeegaardFloer
         - ConformalMapping
-        - EffectiveBounds
         - Exchangeability
         - GeometricTopology
         - HeegaardFloer
